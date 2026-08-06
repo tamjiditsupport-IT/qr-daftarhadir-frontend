@@ -37,6 +37,26 @@ export default function MeetingDetail() {
     }
   };
 
+  const handleStartMeeting = async () => {
+    if (!confirm('Apakah Anda yakin ingin memulai rapat ini?')) return;
+    try {
+      await api.post(`/meetings/${id}/start`);
+      refetch();
+    } catch (err: any) {
+      alert(err.response?.data?.message || 'Gagal memulai rapat');
+    }
+  };
+
+  const handleFinishMeeting = async () => {
+    if (!confirm('Apakah Anda yakin ingin mengakhiri rapat ini?')) return;
+    try {
+      await api.post(`/meetings/${id}/finish`);
+      refetch();
+    } catch (err: any) {
+      alert(err.response?.data?.message || 'Gagal mengakhiri rapat');
+    }
+  };
+
   if (isLoading) return <div className="p-6">Loading...</div>;
   if (!meeting) return <div className="p-6">Rapat tidak ditemukan</div>;
 
@@ -52,12 +72,32 @@ export default function MeetingDetail() {
 
   return (
     <div className="space-y-6">
-      <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-        <h2 className="text-2xl font-bold text-slate-800">{meeting.title}</h2>
-        <div className="text-slate-500 mt-2 flex space-x-4">
-          <span>Tipe: {meeting.type?.name}</span>
-          <span>Waktu: {new Date(meeting.start_time).toLocaleString('id-ID')}</span>
-          <span className="capitalize font-semibold">Status: {meeting.status}</span>
+      <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200 flex justify-between items-center">
+        <div>
+          <h2 className="text-2xl font-bold text-slate-800">{meeting.title}</h2>
+          <div className="text-slate-500 mt-2 flex space-x-4">
+            <span>Tipe: {meeting.type?.name}</span>
+            <span>Waktu: {new Date(meeting.start_time).toLocaleString('id-ID')}</span>
+            <span className="capitalize font-semibold">Status: {meeting.status}</span>
+          </div>
+        </div>
+        <div>
+          {meeting.status === 'scheduled' && (
+            <button 
+              onClick={handleStartMeeting}
+              className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-dark font-medium"
+            >
+              Mulai Rapat
+            </button>
+          )}
+          {meeting.status === 'running' && (
+            <button 
+              onClick={handleFinishMeeting}
+              className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 font-medium"
+            >
+              Akhiri Rapat
+            </button>
+          )}
         </div>
       </div>
 

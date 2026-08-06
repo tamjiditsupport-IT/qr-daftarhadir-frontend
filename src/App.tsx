@@ -8,6 +8,8 @@ import Asatidz from './pages/Asatidz';
 import Meetings from './pages/Meetings';
 import MeetingDetail from './pages/MeetingDetail';
 import Approvals from './pages/Approvals';
+import MasterData from './pages/MasterData';
+import Users from './pages/Users';
 
 const queryClient = new QueryClient();
 
@@ -26,6 +28,8 @@ function App() {
             <Route path="/meetings" element={<Meetings />} />
             <Route path="/meetings/:id" element={<MeetingDetail />} />
             <Route path="/approvals" element={<Approvals />} />
+            <Route path="/master-data" element={<MasterData />} />
+            <Route path="/users" element={<Users />} />
           </Route>
         </Routes>
       </BrowserRouter>

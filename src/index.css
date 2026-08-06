@@ -8,3 +8,21 @@
 body {
   @apply bg-slate-50 text-slate-900;
 }
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #printable-id-card, #printable-id-card * {
+    visibility: visible;
+  }
+  #printable-id-card {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}

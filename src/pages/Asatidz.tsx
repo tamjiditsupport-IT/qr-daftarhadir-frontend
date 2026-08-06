@@ -16,17 +16,35 @@ export default function Asatidz() {
     }
   });
 
+  const { data: units } = useQuery({
+    queryKey: ['units'],
+    queryFn: async () => {
+      const res = await api.get('/units');
+      return res.data.data;
+    }
+  });
+
+  const { data: positions } = useQuery({
+    queryKey: ['positions'],
+    queryFn: async () => {
+      const res = await api.get('/positions');
+      return res.data.data;
+    }
+  });
+
   const [formData, setFormData] = useState({
     id_asatidz: '',
     name: '',
-    phone: ''
+    phone: '',
+    unit_ids: [] as number[],
+    position_ids: [] as number[]
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       await api.post('/asatidz', formData);
-      setFormData({ id_asatidz: '', name: '', phone: '' });
+      setFormData({ id_asatidz: '', name: '', phone: '', unit_ids: [], position_ids: [] });
       setShowForm(false);
       refetch();
     } catch (err) {
@@ -83,6 +101,53 @@ export default function Asatidz() {
                 className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-primary focus:border-primary outline-none"
               />
             </div>
+            
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-2">Pilih Unit (Instansi)</label>
+                <div className="space-y-2 border border-slate-200 p-3 rounded-lg max-h-40 overflow-y-auto">
+                  {units?.map((u: any) => (
+                    <label key={u.id} className="flex items-center space-x-2">
+                      <input 
+                        type="checkbox" 
+                        checked={formData.unit_ids.includes(u.id)}
+                        onChange={(e) => {
+                          const newIds = e.target.checked 
+                            ? [...formData.unit_ids, u.id]
+                            : formData.unit_ids.filter(id => id !== u.id);
+                          setFormData({...formData, unit_ids: newIds});
+                        }}
+                        className="rounded text-primary focus:ring-primary"
+                      />
+                      <span className="text-sm text-slate-700">{u.name}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-2">Pilih Jabatan</label>
+                <div className="space-y-2 border border-slate-200 p-3 rounded-lg max-h-40 overflow-y-auto">
+                  {positions?.map((p: any) => (
+                    <label key={p.id} className="flex items-center space-x-2">
+                      <input 
+                        type="checkbox" 
+                        checked={formData.position_ids.includes(p.id)}
+                        onChange={(e) => {
+                          const newIds = e.target.checked 
+                            ? [...formData.position_ids, p.id]
+                            : formData.position_ids.filter(id => id !== p.id);
+                          setFormData({...formData, position_ids: newIds});
+                        }}
+                        className="rounded text-primary focus:ring-primary"
+                      />
+                      <span className="text-sm text-slate-700">{p.name}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+            </div>
+
             <div className="flex space-x-3 pt-2">
               <button type="submit" className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-dark">
                 Simpan
@@ -105,6 +170,7 @@ export default function Asatidz() {
                 <th className="px-6 py-4 font-medium">Phone</th>
                 <th className="px-6 py-4 font-medium">QR Code</th>
                 <th className="px-6 py-4 font-medium">Unit</th>
+                <th className="px-6 py-4 font-medium text-right">Aksi</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
@@ -179,14 +245,7 @@ export default function Asatidz() {
             <div className="p-4 border-t bg-slate-50">
               <button 
                 onClick={() => {
-                  const printContent = document.getElementById('printable-id-card');
-                  if (printContent) {
-                    const originalContents = document.body.innerHTML;
-                    document.body.innerHTML = printContent.innerHTML;
-                    window.print();
-                    document.body.innerHTML = originalContents;
-                    window.location.reload(); // Quick reset
-                  }
+                  window.print();
                 }}
                 className="w-full bg-primary text-white py-2 rounded-lg font-medium hover:bg-primary-dark"
               >

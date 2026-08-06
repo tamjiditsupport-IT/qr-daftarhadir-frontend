@@ -23,6 +23,14 @@ export default function Meetings() {
     }
   });
 
+  const { data: meetingTypes } = useQuery({
+    queryKey: ['meetingTypes'],
+    queryFn: async () => {
+      const res = await api.get('/meeting-types');
+      return res.data.data;
+    }
+  });
+
   const [formData, setFormData] = useState({
     title: '',
     meeting_type_id: 1, 
@@ -80,6 +88,20 @@ export default function Meetings() {
                 onChange={e => setFormData({...formData, title: e.target.value})}
                 className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-primary focus:border-primary outline-none"
               />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1">Tipe Rapat</label>
+              <select
+                required
+                value={formData.meeting_type_id}
+                onChange={e => setFormData({...formData, meeting_type_id: Number(e.target.value)})}
+                className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-primary focus:border-primary outline-none bg-white"
+              >
+                {meetingTypes?.map((type: any) => (
+                  <option key={type.id} value={type.id}>{type.name}</option>
+                ))}
+              </select>
             </div>
             
             <div className="grid grid-cols-2 gap-4">

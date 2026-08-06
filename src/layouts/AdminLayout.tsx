@@ -1,5 +1,5 @@
 import { Outlet, Navigate, Link, useNavigate } from 'react-router-dom';
-import { LogOut, Home, Users, LayoutDashboard, QrCode, ClipboardCheck } from 'lucide-react';
+import { LogOut, Home, Users as UsersIcon, LayoutDashboard, ClipboardCheck, Database, UserCog } from 'lucide-react';
 import api from '../utils/axios';
 
 export default function AdminLayout() {
@@ -24,10 +24,11 @@ export default function AdminLayout() {
 
   const menu = [
     { name: 'Dashboard', path: '/', icon: LayoutDashboard },
-    { name: 'Asatidz', path: '/asatidz', icon: Users },
+    { name: 'Pengaturan User', path: '/users', icon: UserCog },
+    { name: 'Asatidz', path: '/asatidz', icon: UsersIcon },
     { name: 'Meetings', path: '/meetings', icon: Home },
     { name: 'Approvals', path: '/approvals', icon: ClipboardCheck },
-    { name: 'QR Scan', path: '/scan', icon: QrCode },
+    { name: 'Master Data', path: '/master-data', icon: Database },
   ];
 
   return (
