@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import api from '../utils/axios';
 import { useState } from 'react';
-import { Shield, Plus } from 'lucide-react';
+import { Shield, Plus, Trash2 } from 'lucide-react';
 
 export default function Users() {
   const [showForm, setShowForm] = useState(false);
@@ -49,6 +49,16 @@ export default function Users() {
       refetch();
     } catch (err: any) {
       alert(err.response?.data?.message || 'Gagal menambahkan user');
+    }
+  };
+
+  const handleDelete = async (id: number) => {
+    if (!window.confirm('Yakin ingin menghapus user ini?')) return;
+    try {
+      await api.delete(`/users/${id}`);
+      refetch();
+    } catch (err: any) {
+      alert(err.response?.data?.message || 'Gagal menghapus user');
     }
   };
 
@@ -156,6 +166,7 @@ export default function Users() {
                 <th className="px-6 py-4 font-medium">Email</th>
                 <th className="px-6 py-4 font-medium">Role</th>
                 <th className="px-6 py-4 font-medium">Unit / Scope</th>
+                <th className="px-6 py-4 font-medium text-right">Aksi</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
@@ -183,6 +194,15 @@ export default function Users() {
                     ) : (
                       <span className="text-slate-400 italic text-xs">All Scope</span>
                     )}
+                  </td>
+                  <td className="px-6 py-4 text-right">
+                    <button 
+                      onClick={() => handleDelete(item.id)}
+                      className="text-red-500 hover:text-red-700 p-2 hover:bg-red-50 rounded-lg transition-colors"
+                      title="Hapus"
+                    >
+                      <Trash2 size={18} />
+                    </button>
                   </td>
                 </tr>
               ))}

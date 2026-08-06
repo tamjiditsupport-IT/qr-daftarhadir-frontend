@@ -1,5 +1,5 @@
 import { Outlet, Navigate, Link, useNavigate } from 'react-router-dom';
-import { LogOut, Home, Users as UsersIcon, LayoutDashboard, ClipboardCheck, Database, UserCog } from 'lucide-react';
+import { LogOut, Home, Users as UsersIcon, LayoutDashboard, ClipboardCheck, Database, UserCog, Activity } from 'lucide-react';
 import api from '../utils/axios';
 
 export default function AdminLayout() {
@@ -29,6 +29,7 @@ export default function AdminLayout() {
     { name: 'Meetings', path: '/meetings', icon: Home },
     { name: 'Approvals', path: '/approvals', icon: ClipboardCheck },
     { name: 'Master Data', path: '/master-data', icon: Database },
+    { name: 'Catatan Sistem', path: '/audit-logs', icon: Activity },
   ];
 
   return (

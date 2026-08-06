@@ -57,9 +57,10 @@ export default function Approvals() {
                   <td className="px-6 py-4 text-slate-600">{item.meeting?.title}</td>
                   <td className="px-6 py-4">
                     <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                      item.type === 'Sick' ? 'bg-orange-100 text-orange-700' : 'bg-blue-100 text-blue-700'
+                      item.type === 'Sick' ? 'bg-orange-100 text-orange-700' :
+                      item.type === 'Attendance' ? 'bg-emerald-100 text-emerald-700' : 'bg-blue-100 text-blue-700'
                     }`}>
-                      {item.type === 'Sick' ? 'Sakit' : 'Izin'}
+                      {item.type === 'Sick' ? 'Sakit' : item.type === 'Attendance' ? 'Hadir (Lintas Unit)' : 'Izin'}
                     </span>
                   </td>
                   <td className="px-6 py-4">
