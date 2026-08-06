@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import api from '../utils/axios';
 import { useState } from 'react';
-import { Layers, Briefcase, Plus, Trash2, Edit2, ChevronRight, ChevronDown, Folder, FolderOpen, Network } from 'lucide-react';
+import { Layers, Briefcase, Plus, Trash2, Edit2, ChevronRight, ChevronDown, Folder, FolderOpen, Network, Database } from 'lucide-react';
 import CreatableSelect from 'react-select/creatable';
 
 export default function MasterData() {
@@ -181,27 +181,34 @@ export default function MasterData() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100">Master Data</h2>
-        <p className="text-slate-500 dark:text-slate-400 dark:text-slate-500 dark:text-slate-400 dark:text-slate-500 mt-1">Kelola data Unit, Jabatan, dan Tipe Rapat</p>
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
+        <div>
+          <h2 className="text-2xl font-extrabold text-slate-800 dark:text-slate-100 flex items-center gap-3 tracking-tight">
+            <div className="p-2.5 bg-gradient-to-br from-primary/20 to-indigo-500/20 dark:from-primary/30 dark:to-indigo-500/30 text-primary dark:text-primary-light rounded-xl shadow-inner">
+              <Database size={24} />
+            </div>
+            Master Data
+          </h2>
+          <p className="text-slate-500 dark:text-slate-400 mt-2 font-medium">Kelola data Unit, Jabatan, dan Tipe Rapat</p>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Panel Unit */}
-        <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden flex flex-col">
-          <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-900">
+        <div className="bg-white/90 dark:bg-slate-800/90 backdrop-blur-xl rounded-3xl shadow-xl shadow-slate-200/40 dark:shadow-none border border-slate-200/60 dark:border-slate-700 overflow-hidden flex flex-col">
+          <div className="px-6 py-5 border-b border-slate-200/60 dark:border-slate-700 flex justify-between items-center bg-slate-50/50 dark:bg-slate-900/50">
             <div className="flex items-center">
-              <Layers className="text-primary mr-2" size={20} />
-              <h3 className="font-semibold text-slate-800 dark:text-slate-100">Unit / Instansi</h3>
+              <Layers className="text-blue-500 mr-2.5" size={20} />
+              <h3 className="font-bold text-slate-800 dark:text-slate-100">Unit / Instansi</h3>
             </div>
             <button 
               onClick={() => {
                 setUnitData({ id: null, name: '', parent_id: '' });
                 setShowUnitForm(!showUnitForm);
               }}
-              className="text-primary hover:text-primary-dark font-medium text-sm flex items-center bg-blue-50 px-3 py-1.5 rounded-lg transition-colors"
+              className="text-white font-bold text-sm flex items-center bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 px-4 py-2 rounded-xl transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5"
             >
-              <Plus size={16} className="mr-1" /> Tambah Root Unit
+              <Plus size={16} className="mr-1.5" /> Tambah Root Unit
             </button>
           </div>
 
@@ -261,20 +268,20 @@ export default function MasterData() {
         </div>
 
         {/* Panel Jabatan */}
-        <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden flex flex-col">
-          <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-900">
+        <div className="bg-white/90 dark:bg-slate-800/90 backdrop-blur-xl rounded-3xl shadow-xl shadow-slate-200/40 dark:shadow-none border border-slate-200/60 dark:border-slate-700 overflow-hidden flex flex-col">
+          <div className="px-6 py-5 border-b border-slate-200/60 dark:border-slate-700 flex justify-between items-center bg-slate-50/50 dark:bg-slate-900/50">
             <div className="flex items-center">
-              <Briefcase className="text-emerald-600 mr-2" size={20} />
-              <h3 className="font-semibold text-slate-800 dark:text-slate-100">Jabatan (Position)</h3>
+              <Briefcase className="text-emerald-500 mr-2.5" size={20} />
+              <h3 className="font-bold text-slate-800 dark:text-slate-100">Jabatan (Position)</h3>
             </div>
             <button 
               onClick={() => {
                 setPositionData({ id: null, name: '' });
                 setShowPositionForm(!showPositionForm);
               }}
-              className="text-emerald-600 hover:text-emerald-700 font-medium text-sm flex items-center bg-emerald-50 px-3 py-1.5 rounded-lg transition-colors"
+              className="text-white font-bold text-sm flex items-center bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 px-4 py-2 rounded-xl transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5"
             >
-              <Plus size={16} className="mr-1" /> Tambah
+              <Plus size={16} className="mr-1.5" /> Tambah
             </button>
           </div>
 
@@ -314,9 +321,9 @@ export default function MasterData() {
                 {isPositionsLoading ? (
                   <tr><td colSpan={2} className="px-6 py-4 text-center text-slate-500 dark:text-slate-400 dark:text-slate-500 dark:text-slate-400 dark:text-slate-500">Loading...</td></tr>
                 ) : positions?.map((p: any) => (
-                  <tr key={p.id} className="hover:bg-slate-50 dark:hover:bg-slate-700 dark:bg-slate-900 dark:hover:bg-slate-700 dark:bg-slate-900 group">
-                    <td className="px-6 py-3 font-medium text-slate-800 dark:text-slate-100">{p.name}</td>
-                    <td className="px-6 py-3 text-right">
+                  <tr key={p.id} className="hover:bg-emerald-50/50 dark:hover:bg-emerald-900/20 transition-colors group">
+                    <td className="px-6 py-4 font-bold text-slate-800 dark:text-slate-100 group-hover:text-emerald-600 transition-colors">{p.name}</td>
+                    <td className="px-6 py-4 text-right">
                       <div className="flex items-center justify-end space-x-2 opacity-0 group-hover:opacity-100 transition-opacity">
                         <button 
                           onClick={() => handleEditPosition(p)} 
@@ -342,20 +349,20 @@ export default function MasterData() {
         </div>
 
         {/* Panel Tipe Rapat */}
-        <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden flex flex-col">
-          <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-900">
+        <div className="bg-white/90 dark:bg-slate-800/90 backdrop-blur-xl rounded-3xl shadow-xl shadow-slate-200/40 dark:shadow-none border border-slate-200/60 dark:border-slate-700 overflow-hidden flex flex-col">
+          <div className="px-6 py-5 border-b border-slate-200/60 dark:border-slate-700 flex justify-between items-center bg-slate-50/50 dark:bg-slate-900/50">
             <div className="flex items-center">
-              <Layers className="text-purple-600 mr-2" size={20} />
-              <h3 className="font-semibold text-slate-800 dark:text-slate-100">Tipe Rapat</h3>
+              <Layers className="text-purple-500 mr-2.5" size={20} />
+              <h3 className="font-bold text-slate-800 dark:text-slate-100">Tipe Rapat</h3>
             </div>
             <button 
               onClick={() => {
                 setMeetingTypeData({ id: null, name: '' });
                 setShowMeetingTypeForm(!showMeetingTypeForm);
               }}
-              className="text-purple-600 hover:text-purple-700 font-medium text-sm flex items-center bg-purple-50 px-3 py-1.5 rounded-lg transition-colors"
+              className="text-white font-bold text-sm flex items-center bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 px-4 py-2 rounded-xl transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5"
             >
-              <Plus size={16} className="mr-1" /> Tambah
+              <Plus size={16} className="mr-1.5" /> Tambah
             </button>
           </div>
 
@@ -395,9 +402,9 @@ export default function MasterData() {
                 {isMeetingTypesLoading ? (
                   <tr><td colSpan={2} className="px-6 py-4 text-center text-slate-500 dark:text-slate-400 dark:text-slate-500 dark:text-slate-400 dark:text-slate-500">Loading...</td></tr>
                 ) : meetingTypes?.map((t: any) => (
-                  <tr key={t.id} className="hover:bg-slate-50 dark:hover:bg-slate-700 dark:bg-slate-900 dark:hover:bg-slate-700 dark:bg-slate-900 group">
-                    <td className="px-6 py-3 font-medium text-slate-800 dark:text-slate-100">{t.name}</td>
-                    <td className="px-6 py-3 text-right">
+                  <tr key={t.id} className="hover:bg-purple-50/50 dark:hover:bg-purple-900/20 transition-colors group">
+                    <td className="px-6 py-4 font-bold text-slate-800 dark:text-slate-100 group-hover:text-purple-600 transition-colors">{t.name}</td>
+                    <td className="px-6 py-4 text-right">
                       <div className="flex items-center justify-end space-x-2 opacity-0 group-hover:opacity-100 transition-opacity">
                         <button 
                           onClick={() => handleEditMeetingType(t)} 
@@ -449,7 +456,7 @@ const UnitTreeNode = ({
   return (
     <div className="text-sm">
       <div 
-        className={`group flex items-center justify-between py-2 px-3 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 dark:bg-slate-900 dark:hover:bg-slate-700 dark:bg-slate-900 border border-transparent hover:border-slate-200 dark:border-slate-700 hover:shadow-sm transition-all duration-200 ${level === 0 ? 'bg-slate-50 dark:bg-slate-900/70 font-semibold text-slate-800 dark:text-slate-100' : 'text-slate-700 dark:text-slate-200'}`}
+        className={`group flex items-center justify-between py-2 px-3 rounded-xl hover:bg-blue-50/50 dark:hover:bg-blue-900/20 transition-all duration-200 border border-transparent hover:border-blue-100 dark:hover:border-blue-800/50 ${level === 0 ? 'bg-slate-50/50 dark:bg-slate-900/40 font-bold text-slate-800 dark:text-slate-100' : 'text-slate-700 dark:text-slate-200 font-medium'}`}
         style={{ marginLeft: `${level * 1.5}rem` }}
       >
         <div 

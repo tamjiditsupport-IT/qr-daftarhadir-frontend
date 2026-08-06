@@ -100,14 +100,19 @@ export default function Users() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
         <div>
-          <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100">Pengaturan User</h2>
-          <p className="text-slate-500 dark:text-slate-400 dark:text-slate-500 dark:text-slate-400 dark:text-slate-500 mt-1">Manajemen akun dan hak akses</p>
+          <h2 className="text-2xl font-extrabold text-slate-800 dark:text-slate-100 flex items-center gap-3 tracking-tight">
+            <div className="p-2.5 bg-gradient-to-br from-primary/20 to-indigo-500/20 dark:from-primary/30 dark:to-indigo-500/30 text-primary dark:text-primary-light rounded-xl shadow-inner">
+              <Shield size={24} />
+            </div>
+            Pengaturan User
+          </h2>
+          <p className="text-slate-500 dark:text-slate-400 mt-2 font-medium">Manajemen akun dan hak akses</p>
         </div>
         <button 
           onClick={() => setShowForm(!showForm)}
-          className="flex items-center bg-primary hover:bg-primary-dark text-white px-4 py-2 rounded-lg transition-colors"
+          className="flex items-center justify-center bg-gradient-to-r from-primary to-indigo-600 hover:from-primary-dark hover:to-indigo-700 text-white px-5 py-2.5 rounded-xl transition-all duration-300 font-bold shadow-lg shadow-primary/30 hover:shadow-primary/40 hover:-translate-y-0.5"
         >
           <Plus size={20} className="mr-2" />
           Tambah User
@@ -199,42 +204,42 @@ export default function Users() {
         </div>
       )}
 
-      <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm">
-            <thead className="bg-slate-50 dark:bg-slate-900 text-slate-600 dark:text-slate-300 border-b border-slate-200 dark:border-slate-700">
+      <div className="bg-white/90 dark:bg-slate-800/90 backdrop-blur-xl rounded-3xl shadow-xl shadow-slate-200/40 dark:shadow-none border border-slate-200/60 dark:border-slate-700 overflow-hidden">
+        <div className="overflow-x-auto custom-scrollbar">
+          <table className="w-full text-left text-sm whitespace-nowrap">
+            <thead className="bg-slate-50/50 dark:bg-slate-900/50 text-slate-500 dark:text-slate-400 border-b border-slate-200/60 dark:border-slate-700">
               <tr>
-                <th className="px-6 py-4 font-medium">Nama Lengkap</th>
-                <th className="px-6 py-4 font-medium">Email</th>
-                <th className="px-6 py-4 font-medium">Role</th>
-                <th className="px-6 py-4 font-medium">Unit / Scope</th>
-                <th className="px-6 py-4 font-medium text-right">Aksi</th>
+                <th className="px-6 py-5 font-bold uppercase tracking-wider text-[11px]">Nama Lengkap</th>
+                <th className="px-6 py-5 font-bold uppercase tracking-wider text-[11px]">Email</th>
+                <th className="px-6 py-5 font-bold uppercase tracking-wider text-[11px]">Role</th>
+                <th className="px-6 py-5 font-bold uppercase tracking-wider text-[11px]">Unit / Scope</th>
+                <th className="px-6 py-5 font-bold uppercase tracking-wider text-[11px] text-right">Aksi</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+            <tbody className="divide-y divide-slate-100 dark:divide-slate-800/50">
               {isLoading ? (
                 <tr><td colSpan={4} className="px-6 py-4 text-center">Loading...</td></tr>
               ) : users?.map((item: any) => (
-                <tr key={item.id} className="hover:bg-slate-50 dark:hover:bg-slate-700 dark:bg-slate-900 dark:hover:bg-slate-700 dark:bg-slate-900/50">
-                  <td className="px-6 py-4 font-medium text-slate-800 dark:text-slate-100 flex items-center">
-                    <Shield className="text-slate-400 dark:text-slate-500 dark:text-slate-400 dark:text-slate-500 mr-2 w-4 h-4" />
+                <tr key={item.id} className="hover:bg-primary/5 dark:hover:bg-slate-700/30 transition-colors group">
+                  <td className="px-6 py-4 font-bold text-slate-800 dark:text-slate-100 flex items-center group-hover:text-primary transition-colors">
+                    <Shield className="text-primary/50 mr-2 w-4 h-4 group-hover:text-primary" />
                     {item.name}
                   </td>
-                  <td className="px-6 py-4 text-slate-600 dark:text-slate-300">{item.email}</td>
+                  <td className="px-6 py-4 text-slate-500 dark:text-slate-400 font-medium">{item.email}</td>
                   <td className="px-6 py-4">
                     {item.roles?.map((r: any) => (
-                      <span key={r.id} className="font-mono text-xs bg-indigo-50 text-indigo-600 px-2 py-1 rounded-md border border-indigo-100">
+                      <span key={r.id} className="font-mono font-bold text-xs bg-indigo-50 text-indigo-600 px-2.5 py-1 rounded-lg border border-indigo-200 shadow-sm mr-1">
                         {r.name}
                       </span>
                     ))}
                   </td>
-                  <td className="px-6 py-4 text-slate-600 dark:text-slate-300">
+                  <td className="px-6 py-4 text-slate-600 dark:text-slate-300 font-medium">
                     {item.unit ? (
-                      <span className="bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded text-xs border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200">
+                      <span className="bg-slate-50 dark:bg-slate-800 px-2.5 py-1 rounded-lg text-xs border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-semibold shadow-sm">
                         {item.unit.name}
                       </span>
                     ) : (
-                      <span className="text-slate-400 dark:text-slate-500 dark:text-slate-400 dark:text-slate-500 italic text-xs">All Scope</span>
+                      <span className="text-slate-400 italic text-xs font-semibold">All Scope</span>
                     )}
                   </td>
                   <td className="px-6 py-4 text-right">

@@ -53,16 +53,23 @@ export default function RolesPermissions() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100">Role & Permission</h2>
-        <p className="text-slate-500 dark:text-slate-400 dark:text-slate-500 dark:text-slate-400 dark:text-slate-500 mt-1">Atur hak akses untuk masing-masing peran (role)</p>
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
+        <div>
+          <h2 className="text-2xl font-extrabold text-slate-800 dark:text-slate-100 flex items-center gap-3 tracking-tight">
+            <div className="p-2.5 bg-gradient-to-br from-primary/20 to-indigo-500/20 dark:from-primary/30 dark:to-indigo-500/30 text-primary dark:text-primary-light rounded-xl shadow-inner">
+              <Shield size={24} />
+            </div>
+            Role & Permission
+          </h2>
+          <p className="text-slate-500 dark:text-slate-400 mt-2 font-medium">Atur hak akses untuk masing-masing peran (role)</p>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div className="md:col-span-1 bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden flex flex-col">
-          <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-700 flex items-center bg-slate-50 dark:bg-slate-900">
-            <Shield className="text-primary mr-2" size={20} />
-            <h3 className="font-semibold text-slate-800 dark:text-slate-100">Daftar Role</h3>
+        <div className="md:col-span-1 bg-white/90 dark:bg-slate-800/90 backdrop-blur-xl rounded-3xl shadow-xl shadow-slate-200/40 dark:shadow-none border border-slate-200/60 dark:border-slate-700 overflow-hidden flex flex-col">
+          <div className="px-6 py-5 border-b border-slate-200/60 dark:border-slate-700 flex items-center bg-slate-50/50 dark:bg-slate-900/50">
+            <Shield className="text-primary mr-2.5" size={20} />
+            <h3 className="font-bold text-slate-800 dark:text-slate-100">Daftar Role</h3>
           </div>
           <div className="divide-y divide-slate-100 dark:divide-slate-800">
             {roles?.map((r: any) => (
@@ -77,7 +84,7 @@ export default function RolesPermissions() {
           </div>
         </div>
 
-        <div className="md:col-span-3 bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
+        <div className="md:col-span-3 bg-white/90 dark:bg-slate-800/90 backdrop-blur-xl rounded-3xl shadow-xl shadow-slate-200/40 dark:shadow-none border border-slate-200/60 dark:border-slate-700 overflow-hidden">
           {!selectedRole ? (
             <div className="flex flex-col items-center justify-center h-64 text-slate-500 dark:text-slate-400 dark:text-slate-500 dark:text-slate-400 dark:text-slate-500">
               <Shield size={48} className="opacity-20 mb-3" />
@@ -85,19 +92,19 @@ export default function RolesPermissions() {
             </div>
           ) : (
             <>
-              <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 flex justify-between items-center">
+              <div className="px-6 py-5 border-b border-slate-200/60 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/50 flex justify-between items-center">
                 <div className="flex items-center">
-                  <CheckSquare className="text-emerald-600 mr-2" size={20} />
-                  <h3 className="font-semibold text-slate-800 dark:text-slate-100">
+                  <CheckSquare className="text-emerald-500 mr-2.5" size={20} />
+                  <h3 className="font-bold text-slate-800 dark:text-slate-100">
                     Hak Akses: <span className="text-primary">{selectedRole.name}</span>
                   </h3>
                 </div>
                 <button
                   onClick={handleSave}
                   disabled={isSaving}
-                  className="flex items-center gap-1.5 bg-primary text-white px-4 py-1.5 rounded-lg hover:bg-primary-dark font-medium text-sm transition-colors disabled:opacity-50"
+                  className="flex items-center gap-2 bg-gradient-to-r from-primary to-indigo-600 hover:from-primary-dark hover:to-indigo-700 text-white px-5 py-2.5 rounded-xl transition-all duration-300 font-bold shadow-lg shadow-primary/30 hover:shadow-primary/40 hover:-translate-y-0.5 disabled:opacity-50"
                 >
-                  <Save size={16} /> {isSaving ? 'Menyimpan...' : 'Simpan'}
+                  <Save size={18} /> {isSaving ? 'Menyimpan...' : 'Simpan'}
                 </button>
               </div>
               <div className="p-6">

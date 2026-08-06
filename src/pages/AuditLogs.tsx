@@ -15,42 +15,47 @@ export default function AuditLogs() {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100">Riwayat Sistem</h1>
-          <p className="text-slate-500 dark:text-slate-400 dark:text-slate-500 dark:text-slate-400 dark:text-slate-500 mt-1">Catatan seluruh aktivitas krusial admin</p>
+          <h2 className="text-2xl font-extrabold text-slate-800 dark:text-slate-100 flex items-center gap-3 tracking-tight">
+            <div className="p-2.5 bg-gradient-to-br from-primary/20 to-indigo-500/20 dark:from-primary/30 dark:to-indigo-500/30 text-primary dark:text-primary-light rounded-xl shadow-inner">
+              <Activity size={24} />
+            </div>
+            Riwayat Sistem
+          </h2>
+          <p className="text-slate-500 dark:text-slate-400 mt-2 font-medium">Catatan seluruh aktivitas krusial admin</p>
         </div>
       </div>
 
-      <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm">
-            <thead className="bg-slate-50 dark:bg-slate-900 text-slate-600 dark:text-slate-300 border-b border-slate-200 dark:border-slate-700">
+      <div className="bg-white/90 dark:bg-slate-800/90 backdrop-blur-xl rounded-3xl shadow-xl shadow-slate-200/40 dark:shadow-none border border-slate-200/60 dark:border-slate-700 overflow-hidden">
+        <div className="overflow-x-auto custom-scrollbar">
+          <table className="w-full text-left text-sm whitespace-nowrap">
+            <thead className="bg-slate-50/50 dark:bg-slate-900/50 text-slate-500 dark:text-slate-400 border-b border-slate-200/60 dark:border-slate-700">
               <tr>
-                <th className="px-6 py-4 font-medium">Waktu</th>
-                <th className="px-6 py-4 font-medium">Pelaku</th>
-                <th className="px-6 py-4 font-medium">Aktivitas</th>
+                <th className="px-6 py-5 font-bold uppercase tracking-wider text-[11px]">Waktu</th>
+                <th className="px-6 py-5 font-bold uppercase tracking-wider text-[11px]">Pelaku</th>
+                <th className="px-6 py-5 font-bold uppercase tracking-wider text-[11px]">Aktivitas</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
               {logs?.map((item: any) => (
-                <tr key={item.id} className="hover:bg-slate-50 dark:hover:bg-slate-700 dark:bg-slate-900 dark:hover:bg-slate-700 dark:bg-slate-900/50">
-                  <td className="px-6 py-4 text-slate-600 dark:text-slate-300 whitespace-nowrap">
+                <tr key={item.id} className="hover:bg-primary/5 dark:hover:bg-slate-700/30 transition-colors group">
+                  <td className="px-6 py-4 text-slate-500 dark:text-slate-400 font-medium whitespace-nowrap">
                     <div className="flex items-center space-x-2">
-                      <Clock size={16} className="text-slate-400 dark:text-slate-500 dark:text-slate-400 dark:text-slate-500" />
+                      <Clock size={16} className="text-slate-400 group-hover:text-primary transition-colors" />
                       <span>{new Date(item.created_at).toLocaleString('id-ID')}</span>
                     </div>
                   </td>
                   <td className="px-6 py-4">
                     <div className="flex items-center space-x-2">
-                      <User size={16} className="text-slate-400 dark:text-slate-500 dark:text-slate-400 dark:text-slate-500" />
-                      <span className="font-medium text-slate-800 dark:text-slate-100">{item.user?.name || 'Sistem / Anonim'}</span>
+                      <User size={16} className="text-primary/50 group-hover:text-primary transition-colors" />
+                      <span className="font-bold text-slate-800 dark:text-slate-100 group-hover:text-primary transition-colors">{item.user?.name || 'Sistem / Anonim'}</span>
                     </div>
                   </td>
                   <td className="px-6 py-4">
                     <div className="flex items-center space-x-2">
                       <Activity size={16} className="text-blue-500" />
-                      <span className="text-slate-700 dark:text-slate-200">{item.action}</span>
+                      <span className="font-semibold text-slate-700 dark:text-slate-200 group-hover:text-blue-600 transition-colors">{item.action}</span>
                     </div>
                   </td>
                 </tr>

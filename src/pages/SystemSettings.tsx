@@ -46,17 +46,24 @@ export default function SystemSettings() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100">Pengaturan Sistem</h2>
-        <p className="text-slate-500 dark:text-slate-400 dark:text-slate-500 dark:text-slate-400 dark:text-slate-500 mt-1">Konfigurasi dasar aplikasi SIMAS</p>
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
+        <div>
+          <h2 className="text-2xl font-extrabold text-slate-800 dark:text-slate-100 flex items-center gap-3 tracking-tight">
+            <div className="p-2.5 bg-gradient-to-br from-primary/20 to-indigo-500/20 dark:from-primary/30 dark:to-indigo-500/30 text-primary dark:text-primary-light rounded-xl shadow-inner">
+              <Settings size={24} />
+            </div>
+            Pengaturan Sistem
+          </h2>
+          <p className="text-slate-500 dark:text-slate-400 mt-2 font-medium">Konfigurasi dasar aplikasi SIMAS</p>
+        </div>
       </div>
 
       <form onSubmit={handleSave} className="space-y-6">
         {/* General Settings */}
-        <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
-          <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 flex items-center gap-2">
-            <Building size={18} className="text-primary" />
-            <h3 className="font-semibold text-slate-800 dark:text-slate-100">Informasi Umum</h3>
+        <div className="bg-white/90 dark:bg-slate-800/90 backdrop-blur-xl rounded-3xl shadow-xl shadow-slate-200/40 dark:shadow-none border border-slate-200/60 dark:border-slate-700 overflow-hidden">
+          <div className="px-6 py-5 border-b border-slate-200/60 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/50 flex items-center gap-2.5">
+            <Building size={20} className="text-primary" />
+            <h3 className="font-bold text-slate-800 dark:text-slate-100">Informasi Umum</h3>
           </div>
           <div className="p-6 space-y-4">
             <div>
@@ -74,10 +81,10 @@ export default function SystemSettings() {
         </div>
 
         {/* Attendance Settings */}
-        <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
-          <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 flex items-center gap-2">
-            <Clock size={18} className="text-orange-500" />
-            <h3 className="font-semibold text-slate-800 dark:text-slate-100">Pengaturan Kehadiran</h3>
+        <div className="bg-white/90 dark:bg-slate-800/90 backdrop-blur-xl rounded-3xl shadow-xl shadow-slate-200/40 dark:shadow-none border border-slate-200/60 dark:border-slate-700 overflow-hidden">
+          <div className="px-6 py-5 border-b border-slate-200/60 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/50 flex items-center gap-2.5">
+            <Clock size={20} className="text-orange-500" />
+            <h3 className="font-bold text-slate-800 dark:text-slate-100">Pengaturan Kehadiran</h3>
           </div>
           <div className="p-6 space-y-4">
             <div>
@@ -110,10 +117,10 @@ export default function SystemSettings() {
         </div>
 
         {/* System Info */}
-        <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
-          <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 flex items-center gap-2">
-            <Database size={18} className="text-slate-500 dark:text-slate-400 dark:text-slate-500 dark:text-slate-400 dark:text-slate-500" />
-            <h3 className="font-semibold text-slate-800 dark:text-slate-100">Informasi Sistem</h3>
+        <div className="bg-white/90 dark:bg-slate-800/90 backdrop-blur-xl rounded-3xl shadow-xl shadow-slate-200/40 dark:shadow-none border border-slate-200/60 dark:border-slate-700 overflow-hidden">
+          <div className="px-6 py-5 border-b border-slate-200/60 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/50 flex items-center gap-2.5">
+            <Database size={20} className="text-slate-500" />
+            <h3 className="font-bold text-slate-800 dark:text-slate-100">Informasi Sistem</h3>
           </div>
           <div className="p-6 grid grid-cols-1 md:grid-cols-3 gap-4">
             {[
@@ -133,9 +140,9 @@ export default function SystemSettings() {
           <button
             type="submit"
             disabled={isSaving}
-            className="flex items-center gap-2 px-6 py-2.5 bg-primary text-white rounded-lg hover:bg-primary-dark font-medium disabled:opacity-50 transition-colors"
+            className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-primary to-indigo-600 hover:from-primary-dark hover:to-indigo-700 text-white rounded-xl transition-all duration-300 font-bold shadow-lg shadow-primary/30 hover:shadow-primary/40 hover:-translate-y-0.5 disabled:opacity-50"
           >
-            <Save size={16} />
+            <Save size={18} />
             {isSaving ? 'Menyimpan...' : 'Simpan Pengaturan'}
           </button>
           {saveSuccess && (
