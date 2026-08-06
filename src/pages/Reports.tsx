@@ -53,32 +53,37 @@ export default function Reports() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-wrap justify-between items-center gap-4">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
         <div>
-          <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100">Laporan Kehadiran</h2>
-          <p className="text-slate-500 dark:text-slate-400 dark:text-slate-500 dark:text-slate-400 dark:text-slate-500 mt-1">Rekap dan analisis data kehadiran Asatidz</p>
+          <h2 className="text-2xl font-extrabold text-slate-800 dark:text-slate-100 flex items-center gap-3 tracking-tight">
+            <div className="p-2.5 bg-gradient-to-br from-primary/20 to-indigo-500/20 dark:from-primary/30 dark:to-indigo-500/30 text-primary dark:text-primary-light rounded-xl shadow-inner">
+              <BarChart2 size={24} />
+            </div>
+            Laporan Kehadiran
+          </h2>
+          <p className="text-slate-500 dark:text-slate-400 mt-2 font-medium">Rekap dan analisis data kehadiran Asatidz</p>
         </div>
-        <div className="flex gap-2">
-          <button onClick={() => handleExport('excel')} className="flex items-center gap-1.5 px-4 py-2 bg-emerald-50 text-emerald-600 border border-emerald-200 rounded-lg hover:bg-emerald-100 text-sm font-medium">
-            <FileSpreadsheet size={16} /> Export Excel
+        <div className="flex flex-wrap gap-3">
+          <button onClick={() => handleExport('excel')} className="flex items-center gap-2 px-5 py-2.5 bg-emerald-50 hover:bg-emerald-500 text-emerald-600 hover:text-white border border-emerald-200 hover:border-emerald-500 rounded-xl transition-all duration-300 shadow-sm hover:shadow-md font-bold hover:-translate-y-0.5">
+            <FileSpreadsheet size={18} /> Export Excel
           </button>
-          <button onClick={() => handleExport('pdf')} className="flex items-center gap-1.5 px-4 py-2 bg-rose-50 text-rose-600 border border-rose-200 rounded-lg hover:bg-rose-100 text-sm font-medium">
-            <FileText size={16} /> Export PDF
+          <button onClick={() => handleExport('pdf')} className="flex items-center gap-2 px-5 py-2.5 bg-rose-50 hover:bg-rose-500 text-rose-600 hover:text-white border border-rose-200 hover:border-rose-500 rounded-xl transition-all duration-300 shadow-sm hover:shadow-md font-bold hover:-translate-y-0.5">
+            <FileText size={18} /> Export PDF
           </button>
         </div>
       </div>
 
       {/* Tabs */}
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap gap-2 bg-slate-100/50 dark:bg-slate-800/50 p-1.5 rounded-2xl w-fit border border-slate-200/50 dark:border-slate-700/50">
         {TABS.map(tab => {
           const Icon = tab.icon;
           return (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${activeTab === tab.id ? 'bg-primary text-white shadow-md' : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 dark:bg-slate-900 dark:hover:bg-slate-700 dark:bg-slate-900'}`}
+              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all duration-300 ${activeTab === tab.id ? 'bg-white dark:bg-slate-700 text-primary shadow-sm ring-1 ring-slate-200/50 dark:ring-slate-600' : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-700/50'}`}
             >
-              <Icon size={16} /> {tab.label}
+              <Icon size={16} className={activeTab === tab.id ? 'text-primary' : ''} /> {tab.label}
             </button>
           );
         })}
@@ -107,7 +112,7 @@ export default function Reports() {
       )}
 
       {/* Content */}
-      <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
+      <div className="bg-white/90 dark:bg-slate-800/90 backdrop-blur-xl rounded-3xl shadow-xl shadow-slate-200/40 dark:shadow-none border border-slate-200/60 dark:border-slate-700 overflow-hidden">
         {isLoading ? (
           <div className="flex items-center justify-center py-16">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
@@ -118,9 +123,9 @@ export default function Reports() {
             <p>Belum ada data untuk ditampilkan</p>
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm">
-              <thead className="bg-slate-50 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700">
+          <div className="overflow-x-auto custom-scrollbar">
+            <table className="w-full text-left text-sm whitespace-nowrap">
+              <thead className="bg-slate-50/50 dark:bg-slate-900/50 border-b border-slate-200/60 dark:border-slate-700">
                 <tr>
                   {activeTab === 'meetings' && <>
                     <th className="px-6 py-3 font-medium text-slate-600 dark:text-slate-300">Judul Rapat</th>
@@ -156,36 +161,36 @@ export default function Reports() {
               </thead>
               <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                 {Array.isArray(data) && data.map((row: any, idx: number) => (
-                  <tr key={idx} className="hover:bg-slate-50 dark:hover:bg-slate-700 dark:bg-slate-900 dark:hover:bg-slate-700 dark:bg-slate-900/50">
+                  <tr key={idx} className="hover:bg-primary/5 dark:hover:bg-slate-700/30 transition-colors group">
                     {activeTab === 'meetings' && <>
-                      <td className="px-6 py-3 font-medium text-slate-800 dark:text-slate-100">{row.title}</td>
-                      <td className="px-6 py-3 text-slate-500 dark:text-slate-400 dark:text-slate-500 dark:text-slate-400 dark:text-slate-500 text-xs">{row.date ? new Date(row.date).toLocaleDateString('id-ID') : '-'}</td>
-                      <td className="px-6 py-3 text-center">{row.total}</td>
-                      <td className="px-6 py-3 text-center text-green-600 font-medium">{row.present}</td>
-                      <td className="px-6 py-3 text-center text-orange-600 font-medium">{row.late}</td>
-                      <td className="px-6 py-3 text-center text-red-600 font-medium">{row.absent}</td>
-                      <td className="px-6 py-3 text-center"><span className={`px-2 py-0.5 rounded text-xs font-bold ${row.percentage >= 80 ? 'bg-green-100 text-green-700' : row.percentage >= 60 ? 'bg-orange-100 text-orange-700' : 'bg-red-100 text-red-700'}`}>{row.percentage}%</span></td>
+                      <td className="px-6 py-4 font-bold text-slate-800 dark:text-slate-100 group-hover:text-primary transition-colors">{row.title}</td>
+                      <td className="px-6 py-4 text-slate-500 dark:text-slate-400 font-medium text-xs">{row.date ? new Date(row.date).toLocaleDateString('id-ID') : '-'}</td>
+                      <td className="px-6 py-4 text-center font-semibold">{row.total}</td>
+                      <td className="px-6 py-4 text-center text-green-600 font-bold">{row.present}</td>
+                      <td className="px-6 py-4 text-center text-orange-600 font-bold">{row.late}</td>
+                      <td className="px-6 py-4 text-center text-red-600 font-bold">{row.absent}</td>
+                      <td className="px-6 py-4 text-center"><span className={`px-2.5 py-1 rounded-lg text-xs font-bold border shadow-sm ${row.percentage >= 80 ? 'bg-green-50 text-green-700 border-green-200' : row.percentage >= 60 ? 'bg-orange-50 text-orange-700 border-orange-200' : 'bg-red-50 text-red-700 border-red-200'}`}>{row.percentage}%</span></td>
                     </>}
                     {activeTab === 'units' && <>
-                      <td className="px-6 py-3 font-medium text-slate-800 dark:text-slate-100">{row.name}</td>
-                      <td className="px-6 py-3 text-center">{row.total_meetings}</td>
-                      <td className="px-6 py-3 text-center text-green-600">{row.total_present}</td>
-                      <td className="px-6 py-3 text-center"><span className={`px-2 py-0.5 rounded text-xs font-bold ${row.avg_percentage >= 80 ? 'bg-green-100 text-green-700' : 'bg-orange-100 text-orange-700'}`}>{row.avg_percentage}%</span></td>
+                      <td className="px-6 py-4 font-bold text-slate-800 dark:text-slate-100 group-hover:text-primary transition-colors">{row.name}</td>
+                      <td className="px-6 py-4 text-center font-semibold">{row.total_meetings}</td>
+                      <td className="px-6 py-4 text-center text-green-600 font-bold">{row.total_present}</td>
+                      <td className="px-6 py-4 text-center"><span className={`px-2.5 py-1 rounded-lg text-xs font-bold border shadow-sm ${row.avg_percentage >= 80 ? 'bg-green-50 text-green-700 border-green-200' : 'bg-orange-50 text-orange-700 border-orange-200'}`}>{row.avg_percentage}%</span></td>
                     </>}
                     {activeTab === 'asatidz' && <>
-                      <td className="px-6 py-3 font-medium text-slate-800 dark:text-slate-100">{row.name}</td>
-                      <td className="px-6 py-3 font-mono text-xs text-slate-500 dark:text-slate-400 dark:text-slate-500 dark:text-slate-400 dark:text-slate-500">{row.id_asatidz}</td>
-                      <td className="px-6 py-3 text-center">{row.total_meetings}</td>
-                      <td className="px-6 py-3 text-center text-green-600">{row.total_present}</td>
-                      <td className="px-6 py-3 text-center text-red-600">{row.total_absent}</td>
-                      <td className="px-6 py-3 text-center"><span className={`px-2 py-0.5 rounded text-xs font-bold ${row.percentage >= 80 ? 'bg-green-100 text-green-700' : 'bg-orange-100 text-orange-700'}`}>{row.percentage}%</span></td>
+                      <td className="px-6 py-4 font-bold text-slate-800 dark:text-slate-100 group-hover:text-primary transition-colors">{row.name}</td>
+                      <td className="px-6 py-4 font-mono text-xs font-semibold text-slate-400 dark:text-slate-500">{row.id_asatidz}</td>
+                      <td className="px-6 py-4 text-center font-semibold">{row.total_meetings}</td>
+                      <td className="px-6 py-4 text-center text-green-600 font-bold">{row.total_present}</td>
+                      <td className="px-6 py-4 text-center text-red-600 font-bold">{row.total_absent}</td>
+                      <td className="px-6 py-4 text-center"><span className={`px-2.5 py-1 rounded-lg text-xs font-bold border shadow-sm ${row.percentage >= 80 ? 'bg-green-50 text-green-700 border-green-200' : 'bg-orange-50 text-orange-700 border-orange-200'}`}>{row.percentage}%</span></td>
                     </>}
                     {(activeTab === 'monthly' || activeTab === 'yearly') && <>
-                      <td className="px-6 py-3 font-medium text-slate-800 dark:text-slate-100">{row.period}</td>
-                      <td className="px-6 py-3 text-center">{row.total_meetings}</td>
-                      <td className="px-6 py-3 text-center text-green-600">{row.total_present}</td>
-                      <td className="px-6 py-3 text-center text-red-600">{row.total_absent}</td>
-                      <td className="px-6 py-3 text-center"><span className={`px-2 py-0.5 rounded text-xs font-bold ${row.percentage >= 80 ? 'bg-green-100 text-green-700' : 'bg-orange-100 text-orange-700'}`}>{row.percentage}%</span></td>
+                      <td className="px-6 py-4 font-bold text-slate-800 dark:text-slate-100 group-hover:text-primary transition-colors">{row.period}</td>
+                      <td className="px-6 py-4 text-center font-semibold">{row.total_meetings}</td>
+                      <td className="px-6 py-4 text-center text-green-600 font-bold">{row.total_present}</td>
+                      <td className="px-6 py-4 text-center text-red-600 font-bold">{row.total_absent}</td>
+                      <td className="px-6 py-4 text-center"><span className={`px-2.5 py-1 rounded-lg text-xs font-bold border shadow-sm ${row.percentage >= 80 ? 'bg-green-50 text-green-700 border-green-200' : 'bg-orange-50 text-orange-700 border-orange-200'}`}>{row.percentage}%</span></td>
                     </>}
                   </tr>
                 ))}

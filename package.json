@@ -12,12 +12,14 @@
   "dependencies": {
     "@tanstack/react-query": "^5.101.4",
     "axios": "^1.19.0",
+    "flatpickr": "^4.6.13",
     "laravel-echo": "^2.4.0",
     "lucide-react": "^1.28.0",
     "pusher-js": "^8.6.0",
     "qrcode.react": "^4.2.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
+    "react-flatpickr": "^4.0.11",
     "react-router-dom": "^7.18.2",
     "react-select": "^5.10.2",
     "recharts": "^3.10.1"
@@ -27,6 +29,7 @@
     "@types/node": "^24.13.3",
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
+    "@types/react-flatpickr": "^3.8.11",
     "@vitejs/plugin-react": "^6.0.4",
     "oxlint": "^1.75.0",
     "tailwindcss": "^4.3.3",

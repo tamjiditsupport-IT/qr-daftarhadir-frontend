@@ -196,48 +196,54 @@ export default function Asatidz() {
       </div>
 
       {showForm && (
-        <div className="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 transition-all">
-          <h3 className="font-semibold text-slate-800 dark:text-slate-100 mb-4">
+        <div className="bg-white/90 dark:bg-slate-800/90 backdrop-blur-xl p-8 rounded-3xl shadow-xl shadow-slate-200/40 dark:shadow-none border border-slate-200/60 dark:border-slate-700 transition-all duration-300 mb-6">
+          <h3 className="font-extrabold text-slate-800 dark:text-slate-100 mb-6 text-lg tracking-tight flex items-center gap-2">
+            <div className="w-2 h-6 bg-primary rounded-full"></div>
             {isEditMode ? 'Form Edit Asatidz' : 'Form Tambah Asatidz'}
           </h3>
-          <form onSubmit={handleSubmit} className="space-y-4 max-w-md">
-            <div>
-              <label className="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-1">ID / NIP</label>
-              <input
-                type="text"
-                required
-                disabled={isEditMode}
-                value={formData.id_asatidz}
-                onChange={e => setFormData({...formData, id_asatidz: e.target.value})}
-                className="w-full px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all disabled:bg-slate-100 dark:disabled:bg-slate-900"
-              />
+          <form onSubmit={handleSubmit} className="space-y-5 max-w-2xl">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+              <div>
+                <label className="block text-sm font-bold text-slate-700 dark:text-slate-200 mb-1.5">ID / NIP</label>
+                <input
+                  type="text"
+                  required
+                  disabled={isEditMode}
+                  value={formData.id_asatidz}
+                  onChange={e => setFormData({...formData, id_asatidz: e.target.value})}
+                  className="w-full px-4 py-2.5 bg-slate-50/50 dark:bg-slate-900/50 border border-slate-200/80 dark:border-slate-700 rounded-xl focus:ring-4 focus:ring-primary/10 focus:border-primary focus:bg-white dark:focus:bg-slate-800 outline-none transition-all duration-300 disabled:bg-slate-100/80 dark:disabled:bg-slate-900/80 disabled:text-slate-500 shadow-sm font-medium"
+                  placeholder="Masukkan ID / NIP"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-bold text-slate-700 dark:text-slate-200 mb-1.5">No. Handphone</label>
+                <input
+                  type="text"
+                  value={formData.phone}
+                  onChange={e => setFormData({...formData, phone: e.target.value})}
+                  className="w-full px-4 py-2.5 bg-slate-50/50 dark:bg-slate-900/50 border border-slate-200/80 dark:border-slate-700 rounded-xl focus:ring-4 focus:ring-primary/10 focus:border-primary focus:bg-white dark:focus:bg-slate-800 outline-none transition-all duration-300 shadow-sm font-medium"
+                  placeholder="Contoh: 08123456789"
+                />
+              </div>
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-1">Nama Lengkap</label>
+              <label className="block text-sm font-bold text-slate-700 dark:text-slate-200 mb-1.5">Nama Lengkap</label>
               <input
                 type="text"
                 required
                 value={formData.name}
                 onChange={e => setFormData({...formData, name: e.target.value})}
-                className="w-full px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-1">No. Handphone</label>
-              <input
-                type="text"
-                value={formData.phone}
-                onChange={e => setFormData({...formData, phone: e.target.value})}
-                className="w-full px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
+                className="w-full px-4 py-2.5 bg-slate-50/50 dark:bg-slate-900/50 border border-slate-200/80 dark:border-slate-700 rounded-xl focus:ring-4 focus:ring-primary/10 focus:border-primary focus:bg-white dark:focus:bg-slate-800 outline-none transition-all duration-300 shadow-sm font-medium"
+                placeholder="Masukkan Nama Lengkap"
               />
             </div>
             
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
               <div>
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-2">Pilih Unit (Instansi)</label>
-                <div className="space-y-2 border border-slate-200 dark:border-slate-700 p-3 rounded-lg max-h-40 overflow-y-auto bg-slate-50 dark:bg-slate-900/50">
+                <label className="block text-sm font-bold text-slate-700 dark:text-slate-200 mb-2">Pilih Unit (Instansi)</label>
+                <div className="space-y-2 border border-slate-200/80 dark:border-slate-700 p-4 rounded-2xl max-h-48 overflow-y-auto bg-slate-50/50 dark:bg-slate-900/50 shadow-inner custom-scrollbar">
                   {units?.map((u: any) => (
-                    <label key={u.id} className="flex items-center space-x-2 cursor-pointer">
+                    <label key={u.id} className="flex items-center space-x-3 cursor-pointer p-1.5 rounded-lg hover:bg-white dark:hover:bg-slate-800 transition-colors">
                       <input 
                         type="checkbox" 
                         checked={formData.unit_ids.includes(u.id)}
@@ -247,19 +253,20 @@ export default function Asatidz() {
                             : formData.unit_ids.filter(id => id !== u.id);
                           setFormData({...formData, unit_ids: newIds});
                         }}
-                        className="rounded text-primary focus:ring-primary"
+                        className="w-4 h-4 rounded text-primary focus:ring-primary border-slate-300 shadow-sm"
                       />
-                      <span className="text-sm text-slate-700 dark:text-slate-200 font-medium">{u.name}</span>
+                      <span className="text-sm text-slate-700 dark:text-slate-200 font-medium select-none">{u.name}</span>
                     </label>
                   ))}
+                  {(!units || units.length === 0) && <p className="text-sm text-slate-500 italic p-2">Tidak ada unit tersedia</p>}
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-2">Pilih Jabatan</label>
-                <div className="space-y-2 border border-slate-200 dark:border-slate-700 p-3 rounded-lg max-h-40 overflow-y-auto bg-slate-50 dark:bg-slate-900/50">
+                <label className="block text-sm font-bold text-slate-700 dark:text-slate-200 mb-2">Pilih Jabatan</label>
+                <div className="space-y-2 border border-slate-200/80 dark:border-slate-700 p-4 rounded-2xl max-h-48 overflow-y-auto bg-slate-50/50 dark:bg-slate-900/50 shadow-inner custom-scrollbar">
                   {positions?.map((p: any) => (
-                    <label key={p.id} className="flex items-center space-x-2 cursor-pointer">
+                    <label key={p.id} className="flex items-center space-x-3 cursor-pointer p-1.5 rounded-lg hover:bg-white dark:hover:bg-slate-800 transition-colors">
                       <input 
                         type="checkbox" 
                         checked={formData.position_ids.includes(p.id)}
@@ -269,20 +276,21 @@ export default function Asatidz() {
                             : formData.position_ids.filter(id => id !== p.id);
                           setFormData({...formData, position_ids: newIds});
                         }}
-                        className="rounded text-primary focus:ring-primary"
+                        className="w-4 h-4 rounded text-primary focus:ring-primary border-slate-300 shadow-sm"
                       />
-                      <span className="text-sm text-slate-700 dark:text-slate-200 font-medium">{p.name}</span>
+                      <span className="text-sm text-slate-700 dark:text-slate-200 font-medium select-none">{p.name}</span>
                     </label>
                   ))}
+                  {(!positions || positions.length === 0) && <p className="text-sm text-slate-500 italic p-2">Tidak ada jabatan tersedia</p>}
                 </div>
               </div>
             </div>
 
-            <div className="flex space-x-3 pt-4">
-              <button type="submit" className="bg-primary text-white font-medium px-5 py-2 rounded-lg hover:bg-primary-dark transition-colors shadow-sm">
+            <div className="flex space-x-3 pt-6 border-t border-slate-100 dark:border-slate-800/50 mt-6">
+              <button type="submit" className="bg-gradient-to-r from-primary to-indigo-600 text-white font-bold px-6 py-2.5 rounded-xl hover:from-primary-dark hover:to-indigo-700 transition-all duration-300 shadow-md shadow-primary/30 hover:shadow-lg hover:-translate-y-0.5">
                 Simpan
               </button>
-              <button type="button" onClick={() => setShowForm(false)} className="bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium px-5 py-2 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors border border-slate-200 dark:border-slate-700">
+              <button type="button" onClick={() => setShowForm(false)} className="bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold px-6 py-2.5 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-700 transition-all duration-300 border border-slate-200/80 dark:border-slate-700 shadow-sm hover:shadow-md">
                 Batal
               </button>
             </div>
