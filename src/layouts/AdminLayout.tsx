@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import api from '../utils/axios';
 import { useTheme } from '../contexts/ThemeContext';
+import echo from '../utils/echo';
 
 const menuGroups = [
   {
@@ -50,8 +51,16 @@ export default function AdminLayout() {
   
   const [showNotifications, setShowNotifications] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState<{meetings: any[], asatidz: any[], units: any[]} | null>(null);
+  const [isSearching, setIsSearching] = useState(false);
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
+
+  const user = (() => {
+    try { return JSON.parse(localStorage.getItem('user') || '{}'); }
+    catch { return {}; }
+  })();
 
   useEffect(() => {
     if (token) {
@@ -59,8 +68,30 @@ export default function AdminLayout() {
         setNotifications(res.data.data.notifications);
         setUnreadCount(res.data.data.unread_count);
       }).catch(console.error);
+
+      if (user?.id) {
+        echo.private(`App.Models.User.${user.id}`)
+          .notification((notification: any) => {
+            setUnreadCount(prev => prev + 1);
+            setNotifications(prev => [
+              {
+                id: notification.id,
+                data: { title: notification.title, message: notification.message },
+                read_at: null,
+                created_at: new Date().toISOString()
+              },
+              ...prev
+            ] as never[]);
+          });
+      }
     }
-  }, [token]);
+    
+    return () => {
+      if (user?.id) {
+        echo.leave(`App.Models.User.${user.id}`);
+      }
+    };
+  }, [token, user?.id]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -72,6 +103,20 @@ export default function AdminLayout() {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
+
+  useEffect(() => {
+    if (!searchQuery || searchQuery.length < 2) {
+      setSearchResults(null);
+      return;
+    }
+    const timer = setTimeout(() => {
+      setIsSearching(true);
+      api.get(`/search?q=${searchQuery}`).then(res => {
+        setSearchResults(res.data.data);
+      }).finally(() => setIsSearching(false));
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
 
   if (!token) {
     return <Navigate to="/login" replace />;
@@ -89,10 +134,6 @@ export default function AdminLayout() {
     }
   };
 
-  const user = (() => {
-    try { return JSON.parse(localStorage.getItem('user') || '{}'); }
-    catch { return {}; }
-  })();
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-900 flex transition-colors duration-200">
@@ -238,19 +279,65 @@ export default function AdminLayout() {
               <input 
                 type="text" 
                 autoFocus 
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Cari asatidz, rapat, atau unit..." 
                 className="flex-1 bg-transparent text-lg text-slate-800 dark:text-slate-100 outline-none placeholder-slate-400"
               />
-              <button onClick={() => setShowSearch(false)} className="text-xs text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-600 rounded px-2 py-1 ml-3 hover:bg-slate-100 dark:hover:bg-slate-700">ESC</button>
+              <button onClick={() => { setShowSearch(false); setSearchQuery(''); setSearchResults(null); }} className="text-xs text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-600 rounded px-2 py-1 ml-3 hover:bg-slate-100 dark:hover:bg-slate-700">ESC</button>
             </div>
-            <div className="p-4 max-h-96 overflow-y-auto">
-              <div className="text-sm text-center text-slate-500 dark:text-slate-400 py-8">
-                Fitur ini sedang dalam pengembangan
-              </div>
+            <div className="max-h-[60vh] overflow-y-auto">
+              {isSearching && (
+                <div className="p-8 text-center text-slate-500">Mencari...</div>
+              )}
+              {!isSearching && searchResults && (
+                <div className="py-2">
+                  {searchResults.meetings.length > 0 && (
+                    <div className="px-4 py-2">
+                      <h3 className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Rapat</h3>
+                      {searchResults.meetings.map(m => (
+                        <Link to={`/meetings/${m.id}`} onClick={() => setShowSearch(false)} key={`m-${m.id}`} className="block px-3 py-2 -mx-3 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700">
+                          <div className="font-medium text-slate-800 dark:text-slate-200">{m.title}</div>
+                          <div className="text-xs text-slate-500 font-mono">{m.meeting_code}</div>
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                  {searchResults.asatidz.length > 0 && (
+                    <div className="px-4 py-2 border-t border-slate-100 dark:border-slate-700">
+                      <h3 className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Asatidz</h3>
+                      {searchResults.asatidz.map(a => (
+                        <Link to={`/asatidz`} onClick={() => setShowSearch(false)} key={`a-${a.id}`} className="block px-3 py-2 -mx-3 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700">
+                          <div className="font-medium text-slate-800 dark:text-slate-200">{a.name}</div>
+                          <div className="text-xs text-slate-500">{a.niy}</div>
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                  {searchResults.units.length > 0 && (
+                    <div className="px-4 py-2 border-t border-slate-100 dark:border-slate-700">
+                      <h3 className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Unit</h3>
+                      {searchResults.units.map(u => (
+                        <Link to={`/master-data`} onClick={() => setShowSearch(false)} key={`u-${u.id}`} className="block px-3 py-2 -mx-3 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700">
+                          <div className="font-medium text-slate-800 dark:text-slate-200">{u.name}</div>
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                  {(searchResults.meetings.length === 0 && searchResults.asatidz.length === 0 && searchResults.units.length === 0) && (
+                    <div className="p-8 text-center text-slate-500">Tidak ada hasil ditemukan.</div>
+                  )}
+                </div>
+              )}
+              {!searchQuery && (
+                <div className="p-8 text-center text-slate-400 dark:text-slate-500 text-sm">
+                  Ketikkan sesuatu untuk mulai mencari
+                </div>
+              )}
             </div>
           </div>
           {/* Invisible backdrop click catcher */}
-          <div className="absolute inset-0 z-[-1]" onClick={() => setShowSearch(false)}></div>
+          <div className="absolute inset-0 z-[-1]" onClick={() => { setShowSearch(false); setSearchQuery(''); setSearchResults(null); }}></div>
         </div>
       )}
     </div>

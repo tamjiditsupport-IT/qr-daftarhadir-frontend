@@ -2,7 +2,7 @@ import { useParams, Link } from 'react-router-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import api from '../utils/axios';
 import { useState, useEffect } from 'react';
-import { Clock, Users, CheckCircle, XCircle, FileSpreadsheet, FileText, Activity, AlertCircle, HeartPulse, Radio, Upload, Trash2 } from 'lucide-react';
+import { Clock, Users, CheckCircle, XCircle, FileSpreadsheet, FileText, Activity, AlertCircle, HeartPulse, Radio, Upload, Trash2, UserCheck } from 'lucide-react';
 import echo from '../utils/echo';
 
 const STATUS_STYLES: Record<string, string> = {
@@ -243,6 +243,38 @@ export default function MeetingDetail() {
                 </li>
               ))}
             </ul>
+          )}
+        </div>
+      </div>
+
+      {/* Riwayat Rapat */}
+      <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
+        <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900">
+          <h4 className="font-semibold text-slate-800 dark:text-slate-100 flex items-center gap-2">
+            <Activity size={18} /> Riwayat Perubahan Rapat
+          </h4>
+        </div>
+        <div className="p-6">
+          {!meeting?.histories || meeting.histories.length === 0 ? (
+            <div className="text-center text-sm text-slate-500 dark:text-slate-400 py-4">Belum ada riwayat tercatat.</div>
+          ) : (
+            <div className="relative border-l border-slate-200 dark:border-slate-700 ml-3 space-y-6">
+              {meeting.histories.map((history: any, idx: number) => (
+                <div key={history.id} className="relative pl-6">
+                  <span className={`absolute -left-[9px] top-1 w-4 h-4 rounded-full border-2 border-white dark:border-slate-800 ${idx === 0 ? 'bg-primary' : 'bg-slate-300 dark:bg-slate-600'}`}></span>
+                  <div className="flex justify-between items-start mb-1">
+                    <span className="font-semibold text-slate-800 dark:text-slate-200 text-sm">{history.action}</span>
+                    <span className="text-xs text-slate-500 font-mono bg-slate-100 dark:bg-slate-700 px-2 py-0.5 rounded">
+                      {new Date(history.created_at).toLocaleString('id-ID')}
+                    </span>
+                  </div>
+                  <p className="text-sm text-slate-600 dark:text-slate-400 mb-1">{history.description}</p>
+                  <div className="text-xs text-slate-500 flex items-center gap-1">
+                    <UserCheck size={12} /> {history.user?.name || 'Sistem'}
+                  </div>
+                </div>
+              ))}
+            </div>
           )}
         </div>
       </div>
