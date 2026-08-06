@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import api from '../utils/axios';
-import { Plus, Upload, Download, Edit, Trash2, FileSpreadsheet } from 'lucide-react';
+import { Plus, Upload, Download, Edit, Trash2, FileSpreadsheet, Users } from 'lucide-react';
 import { useState, useRef } from 'react';
 import { QRCodeCanvas } from 'qrcode.react';
 
@@ -145,12 +145,17 @@ export default function Asatidz() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
         <div>
-          <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100">Data Asatidz</h2>
-          <p className="text-slate-500 dark:text-slate-400 mt-1">Manajemen data ustadz dan QR Code</p>
+          <h2 className="text-2xl font-extrabold text-slate-800 dark:text-slate-100 flex items-center gap-3 tracking-tight">
+            <div className="p-2.5 bg-gradient-to-br from-primary/20 to-indigo-500/20 dark:from-primary/30 dark:to-indigo-500/30 text-primary dark:text-primary-light rounded-xl shadow-inner">
+              <Users size={24} />
+            </div>
+            Data Asatidz
+          </h2>
+          <p className="text-slate-500 dark:text-slate-400 mt-2 font-medium">Manajemen data asatidz dan QR Code terpusat</p>
         </div>
-        <div className="flex items-center gap-2 flex-wrap">
+        <div className="flex items-center gap-3 flex-wrap">
           <input 
             type="file" 
             ref={fileInputRef} 
@@ -160,31 +165,31 @@ export default function Asatidz() {
           />
           <button 
             onClick={handleDownloadTemplate}
-            className="flex items-center bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 px-4 py-2 rounded-lg transition-colors border border-slate-200 dark:border-slate-700 font-medium"
+            className="flex items-center bg-white/80 hover:bg-white dark:bg-slate-800/80 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 px-4 py-2.5 rounded-xl transition-all duration-300 border border-slate-200/60 dark:border-slate-700 font-semibold shadow-sm hover:shadow-md backdrop-blur-sm"
             title="Download Template Excel"
           >
-            <FileSpreadsheet size={18} className="mr-2" />
+            <FileSpreadsheet size={18} className="mr-2 text-slate-400" />
             Template
           </button>
           <button 
             onClick={handleImportClick}
-            className="flex items-center bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 px-4 py-2 rounded-lg transition-colors border border-slate-200 dark:border-slate-700 font-medium"
+            className="flex items-center bg-white/80 hover:bg-white dark:bg-slate-800/80 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 px-4 py-2.5 rounded-xl transition-all duration-300 border border-slate-200/60 dark:border-slate-700 font-semibold shadow-sm hover:shadow-md backdrop-blur-sm"
           >
-            <Upload size={18} className="mr-2" />
+            <Upload size={18} className="mr-2 text-slate-400" />
             Import
           </button>
           <button 
             onClick={handleExport}
-            className="flex items-center bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 px-4 py-2 rounded-lg transition-colors border border-slate-200 dark:border-slate-700 font-medium"
+            className="flex items-center bg-white/80 hover:bg-white dark:bg-slate-800/80 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 px-4 py-2.5 rounded-xl transition-all duration-300 border border-slate-200/60 dark:border-slate-700 font-semibold shadow-sm hover:shadow-md backdrop-blur-sm"
           >
-            <Download size={18} className="mr-2" />
+            <Download size={18} className="mr-2 text-slate-400" />
             Export
           </button>
           <button 
             onClick={handleOpenAddForm}
-            className="flex items-center bg-primary hover:bg-primary-dark text-white px-4 py-2 rounded-lg transition-colors font-medium shadow-sm"
+            className="flex items-center bg-gradient-to-r from-primary to-indigo-600 hover:from-primary-dark hover:to-indigo-700 text-white px-5 py-2.5 rounded-xl transition-all duration-300 font-bold shadow-lg shadow-primary/30 hover:shadow-primary/40 hover:-translate-y-0.5"
           >
-            <Plus size={18} className="mr-2" />
+            <Plus size={20} className="mr-2" />
             Tambah Asatidz
           </button>
         </div>
@@ -285,56 +290,56 @@ export default function Asatidz() {
         </div>
       )}
 
-      <div className="bg-white dark:bg-slate-800 rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.2)] border border-slate-200 dark:border-slate-700 overflow-hidden">
-        <div className="overflow-x-auto">
+      <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-3xl shadow-xl shadow-slate-200/30 dark:shadow-none border border-slate-200/60 dark:border-slate-700 overflow-hidden">
+        <div className="overflow-x-auto custom-scrollbar">
           <table className="w-full text-left text-sm whitespace-nowrap">
-            <thead className="bg-slate-50 dark:bg-slate-900/80 text-slate-600 dark:text-slate-300 border-b border-slate-200 dark:border-slate-700">
+            <thead className="bg-slate-50/50 dark:bg-slate-900/50 text-slate-500 dark:text-slate-400 border-b border-slate-200/60 dark:border-slate-700">
               <tr>
-                <th className="px-6 py-4 font-semibold">ID</th>
-                <th className="px-6 py-4 font-semibold">Nama</th>
-                <th className="px-6 py-4 font-semibold">Phone</th>
-                <th className="px-6 py-4 font-semibold">QR Code</th>
-                <th className="px-6 py-4 font-semibold">Unit</th>
-                <th className="px-6 py-4 font-semibold text-right">Aksi</th>
+                <th className="px-6 py-5 font-bold uppercase tracking-wider text-[11px]">ID</th>
+                <th className="px-6 py-5 font-bold uppercase tracking-wider text-[11px]">Nama</th>
+                <th className="px-6 py-5 font-bold uppercase tracking-wider text-[11px]">Phone</th>
+                <th className="px-6 py-5 font-bold uppercase tracking-wider text-[11px]">QR Code</th>
+                <th className="px-6 py-5 font-bold uppercase tracking-wider text-[11px]">Unit</th>
+                <th className="px-6 py-5 font-bold uppercase tracking-wider text-[11px] text-right">Aksi</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+            <tbody className="divide-y divide-slate-100 dark:divide-slate-800/50">
               {isLoading ? (
                 <tr><td colSpan={6} className="px-6 py-8 text-center text-slate-500 font-medium">Memuat data...</td></tr>
               ) : asatidz?.map((item: any) => (
-                <tr key={item.id} className="hover:bg-slate-50/80 dark:hover:bg-slate-700/30 transition-colors">
-                  <td className="px-6 py-4 font-semibold text-slate-800 dark:text-slate-100">{item.id_asatidz}</td>
-                  <td className="px-6 py-4 font-medium text-slate-700 dark:text-slate-200">{item.name}</td>
-                  <td className="px-6 py-4 text-slate-600 dark:text-slate-400">{item.phone || '-'}</td>
+                <tr key={item.id} className="hover:bg-primary/5 dark:hover:bg-slate-700/30 transition-colors group">
+                  <td className="px-6 py-4 font-bold text-slate-800 dark:text-slate-100">{item.id_asatidz}</td>
+                  <td className="px-6 py-4 font-semibold text-slate-700 dark:text-slate-200 group-hover:text-primary transition-colors">{item.name}</td>
+                  <td className="px-6 py-4 font-medium text-slate-500 dark:text-slate-400">{item.phone || '-'}</td>
                   <td className="px-6 py-4">
-                    <span className="font-mono text-xs bg-slate-100 dark:bg-slate-800/80 px-2 py-1 rounded-md text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+                    <span className="font-mono text-xs font-semibold bg-white dark:bg-slate-800 px-3 py-1.5 rounded-lg text-slate-600 dark:text-slate-300 border border-slate-200/80 dark:border-slate-700 shadow-sm inline-block">
                       {item.qr_card?.qr_code || 'Belum Ada'}
                     </span>
                   </td>
-                  <td className="px-6 py-4 text-slate-600 dark:text-slate-400">
+                  <td className="px-6 py-4 font-medium text-slate-500 dark:text-slate-400">
                     {item.units?.map((u:any) => u.name).join(', ') || '-'}
                   </td>
                   <td className="px-6 py-4 text-right">
-                    <div className="flex items-center justify-end space-x-3">
+                    <div className="flex items-center justify-end space-x-2">
                       {item.qr_card?.qr_code && (
                         <button 
                           onClick={() => setPrintData(item)}
-                          className="text-primary hover:text-primary-dark dark:text-primary dark:hover:text-blue-400 font-semibold text-sm transition-colors mr-2"
+                          className="px-3 py-1.5 text-xs font-bold text-primary hover:text-white border border-primary hover:bg-primary rounded-lg transition-all shadow-sm mr-1"
                           title="Cetak QR"
                         >
-                          Cetak QR
+                          Cetak
                         </button>
                       )}
                       <button 
                         onClick={() => handleOpenEditForm(item)}
-                        className="p-1.5 text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 bg-slate-100 hover:bg-blue-50 dark:bg-slate-800 dark:hover:bg-slate-700 rounded-md transition-colors"
+                        className="p-2 text-slate-400 hover:text-blue-600 bg-white hover:bg-blue-50 dark:bg-slate-800 dark:hover:bg-slate-700 rounded-lg transition-all border border-slate-200/80 dark:border-slate-700 shadow-sm hover:shadow"
                         title="Edit Data"
                       >
                         <Edit size={16} />
                       </button>
                       <button 
                         onClick={() => handleDelete(item.id)}
-                        className="p-1.5 text-slate-400 hover:text-red-600 dark:hover:text-red-400 bg-slate-100 hover:bg-red-50 dark:bg-slate-800 dark:hover:bg-slate-700 rounded-md transition-colors"
+                        className="p-2 text-slate-400 hover:text-red-600 bg-white hover:bg-red-50 dark:bg-slate-800 dark:hover:bg-slate-700 rounded-lg transition-all border border-slate-200/80 dark:border-slate-700 shadow-sm hover:shadow"
                         title="Hapus Data"
                       >
                         <Trash2 size={16} />
