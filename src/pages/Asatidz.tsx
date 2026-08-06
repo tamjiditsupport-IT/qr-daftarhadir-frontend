@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import api from '../utils/axios';
-import { Plus, Upload, Download, Edit, Trash2 } from 'lucide-react';
+import { Plus, Upload, Download, Edit, Trash2, FileSpreadsheet } from 'lucide-react';
 import { useState, useRef } from 'react';
 import { QRCodeCanvas } from 'qrcode.react';
 
@@ -113,6 +113,21 @@ export default function Asatidz() {
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
+  const handleDownloadTemplate = async () => {
+    try {
+      const response = await api.get('/asatidz/template', { responseType: 'blob' });
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'Template_Import_Asatidz.xlsx');
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (err) {
+      alert('Gagal mendownload template');
+    }
+  };
+
   const handleExport = async () => {
     try {
       const response = await api.get('/reports/export', { responseType: 'blob' });
@@ -143,6 +158,14 @@ export default function Asatidz() {
             accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
             className="hidden" 
           />
+          <button 
+            onClick={handleDownloadTemplate}
+            className="flex items-center bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 px-4 py-2 rounded-lg transition-colors border border-slate-200 dark:border-slate-700 font-medium"
+            title="Download Template Excel"
+          >
+            <FileSpreadsheet size={18} className="mr-2" />
+            Template
+          </button>
           <button 
             onClick={handleImportClick}
             className="flex items-center bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 px-4 py-2 rounded-lg transition-colors border border-slate-200 dark:border-slate-700 font-medium"
