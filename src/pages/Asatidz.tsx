@@ -2,9 +2,11 @@ import { useQuery } from '@tanstack/react-query';
 import api from '../utils/axios';
 import { Plus } from 'lucide-react';
 import { useState } from 'react';
+import { QRCodeCanvas } from 'qrcode.react';
 
 export default function Asatidz() {
   const [showForm, setShowForm] = useState(false);
+  const [printData, setPrintData] = useState<any>(null);
   
   const { data: asatidz, isLoading, refetch } = useQuery({
     queryKey: ['asatidz'],
@@ -121,12 +123,79 @@ export default function Asatidz() {
                   <td className="px-6 py-4 text-slate-600">
                     {item.units?.map((u:any) => u.name).join(', ') || '-'}
                   </td>
+                  <td className="px-6 py-4 text-right">
+                    {item.qr_card?.qr_code && (
+                      <button 
+                        onClick={() => setPrintData(item)}
+                        className="text-primary hover:text-primary-dark font-medium text-sm"
+                      >
+                        Cetak QR
+                      </button>
+                    )}
+                  </td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
       </div>
+
+      {printData && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl shadow-xl w-full max-w-sm overflow-hidden flex flex-col">
+            <div className="p-4 border-b flex justify-between items-center bg-slate-50">
+              <h3 className="font-bold text-slate-800">Cetak ID Card</h3>
+              <button onClick={() => setPrintData(null)} className="text-slate-500 hover:text-red-500">
+                Tutup
+              </button>
+            </div>
+            
+            {/* The printable area */}
+            <div id="printable-id-card" className="p-8 flex flex-col items-center justify-center bg-white">
+              <div className="w-[250px] h-[400px] border-2 border-slate-200 rounded-2xl flex flex-col items-center overflow-hidden shadow-sm relative bg-gradient-to-b from-blue-50 to-white">
+                <div className="bg-primary w-full py-4 text-center">
+                  <h2 className="text-white font-bold text-lg leading-tight">Pondok Pesantren<br/>Tamjidullah</h2>
+                </div>
+                
+                <div className="mt-8 mb-4 bg-white p-2 rounded-xl shadow-sm border border-slate-100">
+                  <QRCodeCanvas 
+                    value={printData.qr_card.qr_code} 
+                    size={140}
+                    level="H"
+                  />
+                </div>
+                
+                <div className="text-center px-4 mt-2">
+                  <h3 className="font-bold text-slate-800 text-lg">{printData.name}</h3>
+                  <p className="text-slate-500 text-sm font-medium mt-1">{printData.id_asatidz}</p>
+                </div>
+                
+                <div className="absolute bottom-0 w-full bg-slate-800 text-white text-xs text-center py-2">
+                  ID: {printData.qr_card.qr_code}
+                </div>
+              </div>
+            </div>
+
+            <div className="p-4 border-t bg-slate-50">
+              <button 
+                onClick={() => {
+                  const printContent = document.getElementById('printable-id-card');
+                  if (printContent) {
+                    const originalContents = document.body.innerHTML;
+                    document.body.innerHTML = printContent.innerHTML;
+                    window.print();
+                    document.body.innerHTML = originalContents;
+                    window.location.reload(); // Quick reset
+                  }
+                }}
+                className="w-full bg-primary text-white py-2 rounded-lg font-medium hover:bg-primary-dark"
+              >
+                Cetak (Print)
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

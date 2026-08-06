@@ -1,5 +1,5 @@
 import { Outlet, Navigate, Link, useNavigate } from 'react-router-dom';
-import { LogOut, Home, Users, LayoutDashboard, QrCode } from 'lucide-react';
+import { LogOut, Home, Users, LayoutDashboard, QrCode, ClipboardCheck } from 'lucide-react';
 import api from '../utils/axios';
 
 export default function AdminLayout() {
@@ -26,6 +26,7 @@ export default function AdminLayout() {
     { name: 'Dashboard', path: '/', icon: LayoutDashboard },
     { name: 'Asatidz', path: '/asatidz', icon: Users },
     { name: 'Meetings', path: '/meetings', icon: Home },
+    { name: 'Approvals', path: '/approvals', icon: ClipboardCheck },
     { name: 'QR Scan', path: '/scan', icon: QrCode },
   ];
 

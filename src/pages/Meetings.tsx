@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
+import { Link } from 'react-router-dom';
 import api from '../utils/axios';
 import { Plus } from 'lucide-react';
 import { useState } from 'react';
@@ -160,9 +161,9 @@ export default function Meetings() {
                     </span>
                   </td>
                   <td className="px-6 py-4 text-right">
-                    <button className="text-primary hover:text-primary-dark font-medium text-sm">
+                    <Link to={`/meetings/${item.id}`} className="text-primary hover:text-primary-dark font-medium text-sm">
                       Detail
-                    </button>
+                    </Link>
                   </td>
                 </tr>
               ))}
