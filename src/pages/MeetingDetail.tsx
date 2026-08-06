@@ -1,14 +1,16 @@
 import { useParams } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import api from '../utils/axios';
-import { useState } from 'react';
-import { Users, CheckCircle, Clock, XCircle } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Clock, Users, CheckCircle, XCircle, FileSpreadsheet, FileText } from 'lucide-react';
+import echo from '../utils/echo';
 
 export default function MeetingDetail() {
   const { id } = useParams();
+  const queryClient = useQueryClient();
   const [selectedAsatidz, setSelectedAsatidz] = useState<number | null>(null);
   const [showManualForm, setShowManualForm] = useState(false);
-  const [manualStatus, setManualStatus] = useState('Sick');
+  const [manualStatus, setManualStatus] = useState('Present');
   
   const { data: meeting, isLoading, refetch } = useQuery({
     queryKey: ['meeting', id],
@@ -17,6 +19,23 @@ export default function MeetingDetail() {
       return res.data.data;
     }
   });
+
+  useEffect(() => {
+    if (!id) return;
+    
+    const channelName = `meeting.${id}`;
+    const channel = echo.channel(channelName);
+    
+    channel.listen('AttendanceScanned', (e: any) => {
+      console.log('New scan received for this meeting:', e);
+      queryClient.invalidateQueries({ queryKey: ['meeting', id] });
+    });
+
+    return () => {
+      channel.stopListening('AttendanceScanned');
+      echo.leaveChannel(channelName);
+    };
+  }, [id, queryClient]);
 
   const handleManualSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -48,12 +67,29 @@ export default function MeetingDetail() {
   };
 
   const handleFinishMeeting = async () => {
-    if (!confirm('Apakah Anda yakin ingin mengakhiri rapat ini?')) return;
+    if (!confirm('Akhiri sesi rapat ini?')) return;
     try {
       await api.post(`/meetings/${id}/finish`);
       refetch();
     } catch (err: any) {
       alert(err.response?.data?.message || 'Gagal mengakhiri rapat');
+    }
+  };
+
+  const handleExport = async (type: 'excel' | 'pdf') => {
+    try {
+      const response = await api.get(`/meetings/${id}/export/${type}`, {
+        responseType: 'blob', // Important for downloading files
+      });
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `daftar_hadir_${id}.${type === 'excel' ? 'csv' : 'pdf'}`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (err) {
+      alert(`Gagal mengunduh file ${type.toUpperCase()}`);
     }
   };
 
@@ -81,23 +117,41 @@ export default function MeetingDetail() {
             <span className="capitalize font-semibold">Status: {meeting.status}</span>
           </div>
         </div>
-        <div>
-          {meeting.status === 'scheduled' && (
+        <div className="flex flex-col space-y-2 items-end">
+          <div className="flex space-x-2">
+            {meeting.status === 'scheduled' && (
+              <button 
+                onClick={handleStartMeeting}
+                className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-dark font-medium"
+              >
+                Mulai Rapat
+              </button>
+            )}
+            {meeting.status === 'running' && (
+              <button 
+                onClick={handleFinishMeeting}
+                className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 font-medium"
+              >
+                Akhiri Rapat
+              </button>
+            )}
+          </div>
+          <div className="flex space-x-2">
             <button 
-              onClick={handleStartMeeting}
-              className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-dark font-medium"
+              onClick={() => handleExport('excel')}
+              className="flex items-center px-3 py-1.5 text-sm bg-emerald-50 text-emerald-600 hover:bg-emerald-100 rounded transition-colors font-medium border border-emerald-200"
             >
-              Mulai Rapat
+              <FileSpreadsheet size={16} className="mr-1.5" />
+              Excel
             </button>
-          )}
-          {meeting.status === 'running' && (
             <button 
-              onClick={handleFinishMeeting}
-              className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 font-medium"
+              onClick={() => handleExport('pdf')}
+              className="flex items-center px-3 py-1.5 text-sm bg-rose-50 text-rose-600 hover:bg-rose-100 rounded transition-colors font-medium border border-rose-200"
             >
-              Akhiri Rapat
+              <FileText size={16} className="mr-1.5" />
+              PDF
             </button>
-          )}
+          </div>
         </div>
       </div>
 
