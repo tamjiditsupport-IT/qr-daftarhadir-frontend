@@ -17,6 +17,7 @@ import Calendar from './pages/Calendar';
 import MeetingMonitor from './pages/MeetingMonitor';
 import AsatidzDetail from './pages/AsatidzDetail';
 import RolesPermissions from './pages/RolesPermissions';
+import Scanner from './pages/Scanner';
 
 const queryClient = new QueryClient();
 
@@ -28,7 +29,7 @@ function App() {
           <Route element={<AuthLayout />}>
             <Route path="/login" element={<Login />} />
           </Route>
-          
+
           <Route element={<AdminLayout />}>
             <Route path="/" element={<Dashboard />} />
             <Route path="/asatidz" element={<Asatidz />} />
@@ -40,6 +41,7 @@ function App() {
             <Route path="/master-data" element={<MasterData />} />
             <Route path="/users" element={<Users />} />
             <Route path="/reports" element={<Reports />} />
+            <Route path="/scanner" element={<Scanner />} />
             <Route path="/settings" element={<SystemSettings />} />
             <Route path="/calendar" element={<Calendar />} />
             <Route path="/asatidz/:id" element={<AsatidzDetail />} />

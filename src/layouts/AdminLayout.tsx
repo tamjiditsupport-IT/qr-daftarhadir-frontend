@@ -3,7 +3,7 @@ import { Outlet, Navigate, Link, useLocation, useNavigate } from 'react-router-d
 import { 
   LogOut, Users as UsersIcon, LayoutDashboard, ClipboardCheck, 
   Database, UserCog, Activity, Calendar, BarChart2, Settings,
-  ChevronRight, Home, Shield, Sun, Moon, Bell, Search
+  ChevronRight, Home, Shield, Sun, Moon, Bell, Search, Scan
 } from 'lucide-react';
 import api from '../utils/axios';
 import { useTheme } from '../contexts/ThemeContext';
@@ -15,6 +15,7 @@ const menuGroups = [
     items: [
       { name: 'Dashboard', path: '/', icon: LayoutDashboard },
       { name: 'Kalender Rapat', path: '/calendar', icon: Calendar },
+      { name: 'Web Scanner', path: '/scanner', icon: Scan },
     ],
   },
   {
