@@ -3,7 +3,7 @@ import { Outlet, Navigate, Link, useLocation, useNavigate } from 'react-router-d
 import { 
   LogOut, Users as UsersIcon, LayoutDashboard, ClipboardCheck, 
   Database, UserCog, Activity, Calendar, BarChart2, Settings,
-  ChevronRight, Home, Shield, Sun, Moon, Bell, Search, Scan
+  ChevronRight, Home, Shield, Sun, Moon, Bell, Search, Scan, Menu, X
 } from 'lucide-react';
 import api from '../utils/axios';
 import { useTheme } from '../contexts/ThemeContext';
@@ -57,6 +57,7 @@ export default function AdminLayout() {
   const [isSearching, setIsSearching] = useState(false);
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const user = (() => {
     try { return JSON.parse(localStorage.getItem('user') || '{}'); }
@@ -137,8 +138,16 @@ export default function AdminLayout() {
 
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex transition-colors duration-300">
-      <aside className="w-64 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-r border-slate-200/50 dark:border-slate-800 flex flex-col hidden md:flex shadow-[4px_0_24px_rgba(0,0,0,0.02)] dark:shadow-[4px_0_24px_rgba(0,0,0,0.2)] transition-all duration-300 z-20">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex transition-colors duration-300 overflow-hidden">
+      {/* Mobile Sidebar Backdrop */}
+      {sidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-30 md:hidden"
+          onClick={() => setSidebarOpen(false)}
+        ></div>
+      )}
+
+      <aside className={`fixed md:static inset-y-0 left-0 w-64 bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl border-r border-slate-200/50 dark:border-slate-800 flex flex-col shadow-2xl md:shadow-[4px_0_24px_rgba(0,0,0,0.02)] dark:md:shadow-[4px_0_24px_rgba(0,0,0,0.2)] transition-transform duration-300 z-40 transform ${sidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}>
         <div className="h-16 flex items-center px-6 border-b border-slate-200/50 dark:border-slate-800 relative overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent dark:from-primary/10"></div>
           <div className="relative z-10 flex items-center gap-3">
@@ -150,6 +159,12 @@ export default function AdminLayout() {
               <p className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 tracking-wider uppercase">Admin Panel</p>
             </div>
           </div>
+          <button 
+            className="md:hidden absolute right-4 text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"
+            onClick={() => setSidebarOpen(false)}
+          >
+            <X size={20} />
+          </button>
         </div>
         
         <div className="flex-1 overflow-y-auto py-4">
@@ -166,6 +181,7 @@ export default function AdminLayout() {
                       <Link
                         key={item.name}
                         to={item.path}
+                        onClick={() => setSidebarOpen(false)}
                         className={`flex items-center px-3 py-2.5 rounded-xl transition-all duration-300 group text-sm font-medium ${
                           isActive 
                             ? 'bg-gradient-to-r from-primary to-indigo-600 text-white shadow-md shadow-primary/25' 
@@ -201,10 +217,16 @@ export default function AdminLayout() {
         </div>
       </aside>
 
-      <main className="flex-1 flex flex-col min-w-0 relative">
-        <header className="h-16 bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl border-b border-slate-200/50 dark:border-slate-800 flex items-center px-6 shadow-sm flex-shrink-0 transition-colors duration-300 justify-between z-10 sticky top-0">
-          <div className="flex-1">
-            <h2 className="text-lg font-bold text-slate-800 dark:text-slate-100 tracking-tight">
+      <main className="flex-1 flex flex-col min-w-0 relative h-screen overflow-hidden">
+        <header className="h-16 bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl border-b border-slate-200/50 dark:border-slate-800 flex items-center px-4 md:px-6 shadow-sm flex-shrink-0 transition-colors duration-300 justify-between z-10 sticky top-0">
+          <div className="flex items-center gap-3 flex-1">
+            <button 
+              className="md:hidden p-2 text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800 rounded-lg"
+              onClick={() => setSidebarOpen(true)}
+            >
+              <Menu size={24} />
+            </button>
+            <h2 className="text-lg font-bold text-slate-800 dark:text-slate-100 tracking-tight hidden sm:block">
               {menuGroups.flatMap(g => g.items).find(i => i.path === location.pathname || (i.path !== '/' && location.pathname.startsWith(i.path)))?.name || 'SIMAS'}
             </h2>
           </div>
@@ -236,7 +258,7 @@ export default function AdminLayout() {
                     <button onClick={() => {
                       api.post('/notifications/mark-all-read').then(() => {
                         setUnreadCount(0);
-                        setNotifications(notifications.map((n:any) => ({...n, read_at: new Date()})));
+                        setNotifications(notifications.map((n:any) => ({...n, read_at: new Date()})) as any);
                       });
                     }} className="text-xs text-primary hover:underline">Tandai semua dibaca</button>
                   </div>
@@ -249,7 +271,7 @@ export default function AdminLayout() {
                           if (!n.read_at) {
                             api.post(`/notifications/${n.id}/mark-read`).then(() => {
                               setUnreadCount(prev => Math.max(0, prev - 1));
-                              setNotifications(notifications.map((not:any) => not.id === n.id ? {...not, read_at: new Date()} : not));
+                              setNotifications(notifications.map((not:any) => (not.id === n.id ? {...not, read_at: new Date()} : not)) as any);
                             });
                           }
                         }}>

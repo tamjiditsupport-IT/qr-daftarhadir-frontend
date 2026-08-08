@@ -2,7 +2,7 @@ import { useParams, Link } from 'react-router-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import api from '../utils/axios';
 import { useState, useEffect } from 'react';
-import { Clock, Users, CheckCircle, XCircle, FileSpreadsheet, FileText, Activity, AlertCircle, HeartPulse, Radio, Upload, Trash2, UserCheck } from 'lucide-react';
+import { Clock, Users, CheckCircle, XCircle, FileSpreadsheet, FileText, Activity, HeartPulse, Radio, Upload, Trash2, UserCheck } from 'lucide-react';
 import echo from '../utils/echo';
 
 const STATUS_STYLES: Record<string, string> = {

@@ -1,8 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import api from '../utils/axios';
-import { Plus, Check, ChevronRight, X, Clock, Users, Building, Info, FileText, CalendarDays } from 'lucide-react';
-import { useState } from 'react';
+import { Plus, Check, X, Clock, Users, Building, Info, FileText, CalendarDays, Upload, FileSpreadsheet } from 'lucide-react';
+import { useState, useRef } from 'react';
+import Pagination from '../components/Pagination';
 import Flatpickr from 'react-flatpickr';
 import 'flatpickr/dist/themes/airbnb.css';
 
@@ -24,14 +25,18 @@ export default function Meetings() {
   const [showWizard, setShowWizard] = useState(false);
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [page, setPage] = useState(1);
   
-  const { data: meetings, isLoading, refetch } = useQuery({
-    queryKey: ['meetings'],
+  const { data: meetingsData, isLoading, refetch } = useQuery({
+    queryKey: ['meetings', page],
     queryFn: async () => {
-      const res = await api.get('/meetings');
+      const res = await api.get(`/meetings?page=${page}`);
       return res.data.data;
     }
   });
+
+  const meetings = meetingsData?.data || meetingsData || [];
+  const pagination = meetingsData?.current_page ? meetingsData : null;
 
   const { data: units } = useQuery({
     queryKey: ['units'],
@@ -90,6 +95,46 @@ export default function Meetings() {
     }));
   };
 
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleImportClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const uploadData = new FormData();
+    uploadData.append('file', file);
+
+    try {
+      await api.post('/meetings/import-excel', uploadData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+      alert('Import berhasil!');
+      refetch();
+    } catch (err: any) {
+      alert(err.response?.data?.message || 'Gagal mengimpor file');
+    }
+    if (fileInputRef.current) fileInputRef.current.value = '';
+  };
+
+  const handleDownloadTemplate = async () => {
+    try {
+      const response = await api.get('/meetings/template', { responseType: 'blob' });
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'Template_Import_Meetings.xlsx');
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (err) {
+      alert('Gagal mendownload template');
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
@@ -102,13 +147,37 @@ export default function Meetings() {
           </h2>
           <p className="text-slate-500 dark:text-slate-400 mt-2 font-medium">Jadwalkan rapat dan kelola sesi aktif secara real-time</p>
         </div>
-        <button 
-          onClick={() => setShowWizard(true)}
-          className="flex items-center justify-center bg-gradient-to-r from-primary to-indigo-600 hover:from-primary-dark hover:to-indigo-700 text-white px-5 py-2.5 rounded-xl transition-all duration-300 font-bold shadow-lg shadow-primary/30 hover:shadow-primary/40 hover:-translate-y-0.5"
-        >
-          <Plus size={20} className="mr-2" />
-          Buat Rapat
-        </button>
+        <div className="flex items-center gap-3 flex-wrap">
+          <input 
+            type="file" 
+            ref={fileInputRef} 
+            onChange={handleFileChange} 
+            accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+            className="hidden" 
+          />
+          <button 
+            onClick={handleDownloadTemplate}
+            className="flex items-center bg-white/80 hover:bg-white dark:bg-slate-800/80 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 px-4 py-2.5 rounded-xl transition-all duration-300 border border-slate-200/60 dark:border-slate-700 font-semibold shadow-sm hover:shadow-md backdrop-blur-sm"
+            title="Download Template Excel"
+          >
+            <FileSpreadsheet size={18} className="mr-2 text-slate-400" />
+            Template
+          </button>
+          <button 
+            onClick={handleImportClick}
+            className="flex items-center bg-white/80 hover:bg-white dark:bg-slate-800/80 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 px-4 py-2.5 rounded-xl transition-all duration-300 border border-slate-200/60 dark:border-slate-700 font-semibold shadow-sm hover:shadow-md backdrop-blur-sm"
+          >
+            <Upload size={18} className="mr-2 text-slate-400" />
+            Import
+          </button>
+          <button 
+            onClick={() => setShowWizard(true)}
+            className="flex items-center justify-center bg-gradient-to-r from-primary to-indigo-600 hover:from-primary-dark hover:to-indigo-700 text-white px-5 py-2.5 rounded-xl transition-all duration-300 font-bold shadow-lg shadow-primary/30 hover:shadow-primary/40 hover:-translate-y-0.5"
+          >
+            <Plus size={20} className="mr-2" />
+            Buat Rapat
+          </button>
+        </div>
       </div>
 
       {/* Rapat Aktif / Terjadwal */}
@@ -171,6 +240,16 @@ export default function Meetings() {
             </tbody>
           </table>
         </div>
+        {pagination && (
+          <Pagination
+            currentPage={pagination.current_page}
+            lastPage={pagination.last_page}
+            total={pagination.total}
+            from={pagination.from || 0}
+            to={pagination.to || 0}
+            onPageChange={setPage}
+          />
+        )}
       </div>
 
       {/* Wizard Modal */}

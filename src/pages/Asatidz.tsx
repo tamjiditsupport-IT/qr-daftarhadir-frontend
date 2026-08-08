@@ -3,6 +3,7 @@ import api from '../utils/axios';
 import { Plus, Upload, Download, Edit, Trash2, FileSpreadsheet, Users } from 'lucide-react';
 import { useState, useRef } from 'react';
 import { QRCodeCanvas } from 'qrcode.react';
+import Pagination from '../components/Pagination';
 
 export default function Asatidz() {
   const [showForm, setShowForm] = useState(false);
@@ -11,13 +12,18 @@ export default function Asatidz() {
   const [printData, setPrintData] = useState<any>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   
-  const { data: asatidz, isLoading, refetch } = useQuery({
-    queryKey: ['asatidz'],
+  const [page, setPage] = useState(1);
+  
+  const { data: asatidzData, isLoading, refetch } = useQuery({
+    queryKey: ['asatidz', page],
     queryFn: async () => {
-      const res = await api.get('/asatidz');
+      const res = await api.get(`/asatidz?page=${page}`);
       return res.data.data;
     }
   });
+
+  const asatidz = asatidzData?.data || asatidzData || [];
+  const pagination = asatidzData?.current_page ? asatidzData : null;
 
   const { data: units } = useQuery({
     queryKey: ['units'],
@@ -359,6 +365,16 @@ export default function Asatidz() {
             </tbody>
           </table>
         </div>
+        {pagination && (
+          <Pagination
+            currentPage={pagination.current_page}
+            lastPage={pagination.last_page}
+            total={pagination.total}
+            from={pagination.from || 0}
+            to={pagination.to || 0}
+            onPageChange={setPage}
+          />
+        )}
       </div>
 
       {printData && (

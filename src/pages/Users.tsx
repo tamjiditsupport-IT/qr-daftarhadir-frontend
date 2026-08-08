@@ -1,8 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
 import api from '../utils/axios';
-import { useState } from 'react';
-import { Shield, Plus, Trash2, KeyRound } from 'lucide-react';
+import { useState, useRef } from 'react';
+import { Shield, Plus, Trash2, KeyRound, Upload, FileSpreadsheet } from 'lucide-react';
 import Select from 'react-select';
+import Pagination from '../components/Pagination';
 
 export default function Users() {
   const [showForm, setShowForm] = useState(false);
@@ -16,13 +17,18 @@ export default function Users() {
     unit_id: ''
   });
 
-  const { data: users, isLoading, refetch } = useQuery({
-    queryKey: ['users'],
+  const [page, setPage] = useState(1);
+
+  const { data: usersData, isLoading, refetch } = useQuery({
+    queryKey: ['users', page],
     queryFn: async () => {
-      const res = await api.get('/users');
+      const res = await api.get(`/users?page=${page}`);
       return res.data.data;
     }
   });
+
+  const users = usersData?.data || usersData || [];
+  const pagination = usersData?.current_page ? usersData : null;
 
   const { data: roles } = useQuery({
     queryKey: ['roles'],
@@ -98,6 +104,46 @@ export default function Users() {
     }
   };
 
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleImportClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const uploadData = new FormData();
+    uploadData.append('file', file);
+
+    try {
+      await api.post('/users/import-excel', uploadData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+      alert('Import berhasil!');
+      refetch();
+    } catch (err: any) {
+      alert(err.response?.data?.message || 'Gagal mengimpor file');
+    }
+    if (fileInputRef.current) fileInputRef.current.value = '';
+  };
+
+  const handleDownloadTemplate = async () => {
+    try {
+      const response = await api.get('/users/template', { responseType: 'blob' });
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'Template_Import_Users.xlsx');
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (err) {
+      alert('Gagal mendownload template');
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
@@ -110,13 +156,37 @@ export default function Users() {
           </h2>
           <p className="text-slate-500 dark:text-slate-400 mt-2 font-medium">Manajemen akun dan hak akses</p>
         </div>
-        <button 
-          onClick={() => setShowForm(!showForm)}
-          className="flex items-center justify-center bg-gradient-to-r from-primary to-indigo-600 hover:from-primary-dark hover:to-indigo-700 text-white px-5 py-2.5 rounded-xl transition-all duration-300 font-bold shadow-lg shadow-primary/30 hover:shadow-primary/40 hover:-translate-y-0.5"
-        >
-          <Plus size={20} className="mr-2" />
-          Tambah User
-        </button>
+        <div className="flex items-center gap-3 flex-wrap">
+          <input 
+            type="file" 
+            ref={fileInputRef} 
+            onChange={handleFileChange} 
+            accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+            className="hidden" 
+          />
+          <button 
+            onClick={handleDownloadTemplate}
+            className="flex items-center bg-white/80 hover:bg-white dark:bg-slate-800/80 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 px-4 py-2.5 rounded-xl transition-all duration-300 border border-slate-200/60 dark:border-slate-700 font-semibold shadow-sm hover:shadow-md backdrop-blur-sm"
+            title="Download Template Excel"
+          >
+            <FileSpreadsheet size={18} className="mr-2 text-slate-400" />
+            Template
+          </button>
+          <button 
+            onClick={handleImportClick}
+            className="flex items-center bg-white/80 hover:bg-white dark:bg-slate-800/80 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 px-4 py-2.5 rounded-xl transition-all duration-300 border border-slate-200/60 dark:border-slate-700 font-semibold shadow-sm hover:shadow-md backdrop-blur-sm"
+          >
+            <Upload size={18} className="mr-2 text-slate-400" />
+            Import
+          </button>
+          <button 
+            onClick={() => setShowForm(!showForm)}
+            className="flex items-center justify-center bg-gradient-to-r from-primary to-indigo-600 hover:from-primary-dark hover:to-indigo-700 text-white px-5 py-2.5 rounded-xl transition-all duration-300 font-bold shadow-lg shadow-primary/30 hover:shadow-primary/40 hover:-translate-y-0.5"
+          >
+            <Plus size={20} className="mr-2" />
+            Tambah User
+          </button>
+        </div>
       </div>
 
       {showForm && (
@@ -265,6 +335,16 @@ export default function Users() {
             </tbody>
           </table>
         </div>
+        {pagination && (
+          <Pagination
+            currentPage={pagination.current_page}
+            lastPage={pagination.last_page}
+            total={pagination.total}
+            from={pagination.from || 0}
+            to={pagination.to || 0}
+            onPageChange={setPage}
+          />
+        )}
       </div>
 
       {/* Reset Password Modal */}

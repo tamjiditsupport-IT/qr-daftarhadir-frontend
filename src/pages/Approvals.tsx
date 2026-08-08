@@ -1,26 +1,32 @@
 import { useQuery } from '@tanstack/react-query';
 import api from '../utils/axios';
-import { Check, X, Clock, Edit2 } from 'lucide-react';
+import { Check, X, Clock } from 'lucide-react';
 import { useState } from 'react';
 import Select from 'react-select';
+import Pagination from '../components/Pagination';
 
 export default function Approvals() {
   const [resolveModal, setResolveModal] = useState<{ id: number; status: 'Approved' | 'Rejected', currentAsatidzId: number, type: string } | null>(null);
   const [notes, setNotes] = useState('');
   const [selectedAsatidz, setSelectedAsatidz] = useState<any>(null);
 
-  const { data: approvals, isLoading, refetch } = useQuery({
-    queryKey: ['approvals'],
+  const [page, setPage] = useState(1);
+
+  const { data: approvalsData, isLoading, refetch } = useQuery({
+    queryKey: ['approvals', page],
     queryFn: async () => {
-      const res = await api.get('/approvals');
+      const res = await api.get(`/approvals?page=${page}`);
       return res.data.data;
     }
   });
 
+  const approvals = approvalsData?.data || approvalsData || [];
+  const pagination = approvalsData?.current_page ? approvalsData : null;
+
   const { data: asatidzList } = useQuery({
     queryKey: ['asatidz-options'],
     queryFn: async () => {
-      const res = await api.get('/asatidz');
+      const res = await api.get('/asatidz?all=true');
       return res.data.data;
     }
   });
@@ -143,6 +149,16 @@ export default function Approvals() {
             </tbody>
           </table>
         </div>
+        {pagination && (
+          <Pagination
+            currentPage={pagination.current_page}
+            lastPage={pagination.last_page}
+            total={pagination.total}
+            from={pagination.from || 0}
+            to={pagination.to || 0}
+            onPageChange={setPage}
+          />
+        )}
       </div>
 
       {/* Resolve Modal */}

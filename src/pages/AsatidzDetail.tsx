@@ -1,7 +1,7 @@
 import { useParams, Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import api from '../utils/axios';
-import { ArrowLeft, QrCode, User, Phone, Building, Briefcase, CheckCircle, Clock, XCircle, HeartPulse, Download } from 'lucide-react';
+import { ArrowLeft, User, Phone, Building, Briefcase, CheckCircle, Clock, XCircle, HeartPulse, Download } from 'lucide-react';
 
 const STATUS_LABELS: Record<string, string> = { Present: 'Hadir', Late: 'Terlambat', Sick: 'Sakit', Excused: 'Izin', Absent: 'Alfa' };
 const STATUS_STYLES: Record<string, string> = {

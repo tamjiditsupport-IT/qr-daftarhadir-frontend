@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import api from '../utils/axios';
-import { Settings, Save, Building, Clock, Shield, Database } from 'lucide-react';
+import { Settings, Save, Building, Clock, Database } from 'lucide-react';
 
 export default function SystemSettings() {
   const [formData, setFormData] = useState({

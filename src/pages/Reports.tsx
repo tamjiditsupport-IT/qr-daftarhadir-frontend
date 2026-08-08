@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import api from '../utils/axios';
-import { BarChart2, Building, Users, Calendar, TrendingUp, Download, FileSpreadsheet, FileText } from 'lucide-react';
+import { BarChart2, Building, Users, Calendar, TrendingUp, FileSpreadsheet, FileText } from 'lucide-react';
 
 const TABS = [
   { id: 'meetings', label: 'Per Rapat', icon: Calendar },
@@ -11,13 +11,6 @@ const TABS = [
   { id: 'yearly', label: 'Tahunan', icon: TrendingUp },
 ];
 
-const STATUS_STYLES: Record<string, string> = {
-  Present: 'bg-green-100 text-green-700',
-  Late: 'bg-orange-100 text-orange-700',
-  Sick: 'bg-blue-100 text-blue-700',
-  Excused: 'bg-purple-100 text-purple-700',
-  Absent: 'bg-red-100 text-red-700',
-};
 
 export default function Reports() {
   const [activeTab, setActiveTab] = useState('meetings');

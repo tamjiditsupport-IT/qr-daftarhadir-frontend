@@ -1,15 +1,22 @@
 import { useQuery } from '@tanstack/react-query';
 import api from '../utils/axios';
 import { Activity, Clock, User } from 'lucide-react';
+import { useState } from 'react';
+import Pagination from '../components/Pagination';
 
 export default function AuditLogs() {
-  const { data: logs, isLoading } = useQuery({
-    queryKey: ['audit-logs'],
+  const [page, setPage] = useState(1);
+
+  const { data: logsData, isLoading } = useQuery({
+    queryKey: ['audit-logs', page],
     queryFn: async () => {
-      const res = await api.get('/audit-logs');
+      const res = await api.get(`/audit-logs?page=${page}`);
       return res.data.data;
     }
   });
+
+  const logs = logsData?.data || logsData || [];
+  const pagination = logsData?.current_page ? logsData : null;
 
   if (isLoading) return <div className="p-6">Loading...</div>;
 
@@ -38,7 +45,10 @@ export default function AuditLogs() {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-              {logs?.map((item: any) => (
+              {logs?.length === 0 ? (
+                <tr><td colSpan={3} className="px-6 py-8 text-center text-slate-500">Belum ada riwayat aktivitas</td></tr>
+              ) : (
+                logs?.map((item: any) => (
                 <tr key={item.id} className="hover:bg-primary/5 dark:hover:bg-slate-700/30 transition-colors group">
                   <td className="px-6 py-4 text-slate-500 dark:text-slate-400 font-medium whitespace-nowrap">
                     <div className="flex items-center space-x-2">
@@ -59,17 +69,20 @@ export default function AuditLogs() {
                     </div>
                   </td>
                 </tr>
-              ))}
-              {logs?.length === 0 && (
-                <tr>
-                  <td colSpan={3} className="px-6 py-8 text-center text-slate-500 dark:text-slate-400 dark:text-slate-500 dark:text-slate-400 dark:text-slate-500">
-                    Belum ada riwayat aktivitas.
-                  </td>
-                </tr>
-              )}
+              )))}
             </tbody>
           </table>
         </div>
+        {pagination && (
+          <Pagination
+            currentPage={pagination.current_page}
+            lastPage={pagination.last_page}
+            total={pagination.total}
+            from={pagination.from || 0}
+            to={pagination.to || 0}
+            onPageChange={setPage}
+          />
+        )}
       </div>
     </div>
   );

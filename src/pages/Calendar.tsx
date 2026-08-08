@@ -23,7 +23,7 @@ export default function Calendar() {
   const { data: meetings } = useQuery({
     queryKey: ['meetings-calendar', currentYear, currentMonth],
     queryFn: async () => {
-      const res = await api.get('/meetings');
+      const res = await api.get('/meetings?all=true');
       return res.data.data;
     },
   });

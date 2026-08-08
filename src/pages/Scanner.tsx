@@ -1,13 +1,13 @@
 import { useState, useEffect, useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Html5QrcodeScanner, Html5Qrcode } from 'html5-qrcode';
+import { Html5QrcodeScanner } from 'html5-qrcode';
 import api from '../utils/axios';
 import { CheckCircle, XCircle, Info, LogIn } from 'lucide-react';
 
 export default function Scanner() {
   const [selectedMeetingId, setSelectedMeetingId] = useState<number | null>(null);
   const [scanResult, setScanResult] = useState<{ success: boolean; message: string; name?: string } | null>(null);
-  const [isScanning, setIsScanning] = useState(false);
+  const [_isScanning, setIsScanning] = useState(false);
   const scannerRef = useRef<Html5QrcodeScanner | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
@@ -15,7 +15,7 @@ export default function Scanner() {
   const { data: meetings, isLoading } = useQuery({
     queryKey: ['meetings'],
     queryFn: async () => {
-      const res = await api.get('/meetings');
+      const res = await api.get('/meetings?all=true');
       return res.data.data;
     }
   });
@@ -84,7 +84,7 @@ export default function Scanner() {
             if (scannerRef.current) scannerRef.current.resume();
           }, 2000);
         },
-        (error) => {
+        (_error) => {
           // Ignore scanning errors (like no QR code found in current frame)
         }
       );
