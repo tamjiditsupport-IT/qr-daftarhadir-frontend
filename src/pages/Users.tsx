@@ -71,7 +71,7 @@ export default function Users() {
     try {
       await api.post('/users', {
         ...formData,
-        unit_id: formData.role === 'admin_instansi' && formData.unit_id ? Number(formData.unit_id) : null
+        unit_id: formData.role !== 'super_admin' && formData.unit_id ? Number(formData.unit_id) : null
       });
       setFormData({ name: '', email: '', password: '', role: '', unit_id: '' });
       setShowForm(false);
@@ -238,7 +238,7 @@ export default function Users() {
               </select>
             </div>
             
-            {formData.role === 'admin_instansi' && (
+            {(formData.role && formData.role !== 'super_admin') && (
               <div>
                 <label className="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-1">Unit / Instansi</label>
                 <Select
@@ -258,7 +258,7 @@ export default function Users() {
                     })
                   }}
                 />
-                <p className="text-xs text-slate-500 dark:text-slate-400 dark:text-slate-500 dark:text-slate-400 dark:text-slate-500 mt-1">Admin Instansi hanya dapat mengelola rapat di unit ini.</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Jika unit dipilih, user ini akan dibatasi hanya pada unit tersebut.</p>
               </div>
             )}
 

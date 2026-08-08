@@ -30,7 +30,11 @@ export default function Login() {
         navigate('/');
       }
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Email/Username atau Password salah');
+      if (!err.response) {
+        setError('Gagal terhubung ke server (Network Error). Pastikan backend berjalan dengan --host=0.0.0.0');
+      } else {
+        setError(err.response?.data?.message || 'Email/Username atau Password salah');
+      }
     } finally {
       setLoading(false);
     }
