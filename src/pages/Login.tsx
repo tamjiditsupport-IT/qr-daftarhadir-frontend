@@ -42,9 +42,9 @@ export default function Login() {
 
   return (
     <div className="w-full">
-      <div className="mb-8">
-        <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100">Selamat Datang 👋</h2>
-        <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Silakan masuk menggunakan kredensial Anda.</p>
+      <div className="mb-10">
+        <h2 className="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">Selamat Datang 👋</h2>
+        <p className="text-sm text-slate-500 dark:text-slate-400 mt-2 font-medium">Silakan masuk menggunakan kredensial Anda.</p>
       </div>
 
       {error && (
@@ -57,45 +57,35 @@ export default function Login() {
       )}
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        <div>
-          <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Email / Username</label>
-          <div className="relative">
-            <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
-              <Mail className="h-5 w-5 text-slate-400" />
-            </div>
-            <input
-              type="text"
-              name="email_or_username"
-              value={formData.email_or_username}
-              onChange={handleChange}
-              required
-              className="w-full pl-11 pr-4 py-2.5 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary dark:focus:border-primary dark:text-white outline-none transition-all text-sm font-medium"
-              placeholder="admin@simas.com"
-            />
-          </div>
+        <div className="pt-2">
+          <input
+            type="text"
+            name="email_or_username"
+            value={formData.email_or_username}
+            onChange={handleChange}
+            required
+            className="w-full py-3 bg-transparent border-b-2 border-slate-200 dark:border-slate-700 focus:border-slate-900 dark:focus:border-white text-slate-900 dark:text-white outline-none transition-colors text-sm font-semibold placeholder:text-slate-400 placeholder:font-medium"
+            placeholder="Email / Username"
+          />
         </div>
 
-        <div>
-          <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Password</label>
+        <div className="pt-4">
           <div className="relative">
-            <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
-              <Lock className="h-5 w-5 text-slate-400" />
-            </div>
             <input
               type={showPassword ? "text" : "password"}
               name="password"
               value={formData.password}
               onChange={handleChange}
               required
-              className="w-full pl-11 pr-12 py-2.5 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary dark:focus:border-primary dark:text-white outline-none transition-all text-sm font-medium"
-              placeholder="••••••••"
+              className="w-full py-3 pr-10 bg-transparent border-b-2 border-slate-200 dark:border-slate-700 focus:border-slate-900 dark:focus:border-white text-slate-900 dark:text-white outline-none transition-colors text-sm font-semibold placeholder:text-slate-400 placeholder:font-medium"
+              placeholder="Password"
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
+              className="absolute inset-y-0 right-0 flex items-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
             >
-              {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+              {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
             </button>
           </div>
         </div>
@@ -103,7 +93,7 @@ export default function Login() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-primary to-blue-600 hover:from-primary-dark hover:to-blue-700 text-white font-semibold py-3 px-4 rounded-xl transition-all focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-70 shadow-md hover:shadow-lg mt-4 transform active:scale-[0.98]"
+          className="w-full flex items-center justify-center gap-2 bg-[#1c1c1e] hover:bg-black dark:bg-white dark:hover:bg-gray-100 dark:text-black text-white font-semibold py-3.5 px-4 rounded-xl transition-all disabled:opacity-70 mt-8 transform active:scale-[0.99]"
         >
           {loading ? (
             <>
@@ -111,10 +101,7 @@ export default function Login() {
               <span>Memproses...</span>
             </>
           ) : (
-            <>
-              <LogIn className="h-5 w-5" />
-              <span>Masuk ke Dashboard</span>
-            </>
+            <span>Masuk ke Dashboard</span>
           )}
         </button>
       </form>
